@@ -19,7 +19,7 @@ Landing page comercial para **AlmaControl**, un Sistema de Gestión de Almacenes
 
 ```bash
 # 1. Clonar el repositorio
-git clone <URL_DEL_REPO>
+git clone https://github.com/F4SG/almacontrol-landing.git
 cd AlmaControl
 
 # 2. Instalar dependencias
