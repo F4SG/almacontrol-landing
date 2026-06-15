@@ -20,13 +20,14 @@ Landing page comercial para **AlmaControl**, un Sistema de Gestión de Almacenes
 ```bash
 # 1. Clonar el repositorio
 git clone https://github.com/F4SG/almacontrol-landing.git
-cd AlmaControl
-
+→ En Windows, buscar la carpeta del usuario (ej: C:\Users\ykira\almacontrol-landing)
+cd almacontrol-landing
 # 2. Instalar dependencias
 npm install
-
 # 3. Ejecutar en desarrollo
 npm run dev
+# Disponible en:
+http://localhost:5173/
 ```
 
 La aplicación estará disponible en: **http://localhost:5173/**
