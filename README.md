@@ -26,8 +26,6 @@ cd almacontrol-landing
 npm install
 # 3. Ejecutar en desarrollo
 npm run dev
-# Disponible en:
-http://localhost:5173/
 ```
 
 La aplicación estará disponible en: **http://localhost:5173/**
