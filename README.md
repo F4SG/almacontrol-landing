@@ -95,24 +95,27 @@ El frontend corre en → **http://localhost:5173**
 
 ---
 
-## 🗄️ Ver y gestionar la base de datos
+## 🗄️ ¿Cómo visualizar y gestionar la Base de Datos?
 
-### Opción A — phpMyAdmin (recomendado)
+### Opción A — phpMyAdmin (Interfaz Gráfica - RECOMENDADO)
 
-1. Tener MySQL corriendo en XAMPP
-2. Ir a → **http://localhost/phpmyadmin**
-3. Seleccionar la base `almacontrol` en el panel izquierdo
+Dado que estás usando XAMPP, la forma más fácil y visual de ver todos los datos, usuarios, contraseñas y tablas es usando phpMyAdmin:
 
-**Tablas principales:**
+1. Asegúrate de que **MySQL** y **Apache** estén corriendo en tu panel de XAMPP.
+2. Abre tu navegador y entra a: [http://localhost/phpmyadmin](http://localhost/phpmyadmin)
+3. En la barra lateral izquierda, busca y haz clic en la base de datos llamada **`almacontrol`**.
+4. ¡Listo! Ahí verás todas las tablas. Puedes hacer clic en `usuario` para ver las contraseñas encriptadas, o en `producto` para ver tu inventario.
+
+**Tablas principales que te pueden interesar:**
 | Tabla | Descripción |
 |---|---|
-| `usuario` | Usuarios del sistema |
-| `producto` | Catálogo de productos |
-| `inventario` | Stock actual por almacén |
-| `movimiento_inventario` | Historial de entradas/salidas |
-| `alerta` | Alertas de stock mínimo/cero |
-| `ordenes` + `detalle_orden` | Órdenes de compra/venta |
-| `personal_access_tokens` | Tokens de sesión (Sanctum) |
+| `usuario` | Usuarios del sistema, sus correos y contraseñas (encriptadas) |
+| `producto` | Tu catálogo de productos |
+| `inventario` | Stock actual separado por almacén |
+| `movimiento_inventario` | Historial de todas las entradas y salidas de stock |
+| `alerta` | Alertas generadas de stock mínimo o agotado |
+| `ordenes` + `detalle_orden` | Órdenes de compra y venta |
+| `personal_access_tokens` | Tokens de sesión activos (Sanctum) |
 
 ### Opción B — MySQL desde terminal
 
