@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductoRequest;
 use App\Models\Inventario;
 use App\Models\Producto;
+use Illuminate\Http\Request;
 
 class ProductoController extends Controller
 {
@@ -17,6 +18,44 @@ class ProductoController extends Controller
             ->paginate(15);
 
         return response()->json($productos);
+    }
+
+    // GET /api/productos/buscar?codigo=XXX
+    public function buscar(Request $request)
+    {
+        $codigo = trim($request->get('codigo', ''));
+
+        if (!$codigo) {
+            return response()->json(['message' => 'Se requiere el parámetro código'], 422);
+        }
+
+        $producto = Producto::with(['categoria', 'proveedor'])
+            ->where('activo', 1)
+            ->where(function ($q) use ($codigo) {
+                $q->where('codigo_barras',  $codigo)
+                  ->orWhere('codigo_qr',    $codigo)
+                  ->orWhere('codigo_interno', $codigo);
+            })
+            ->first();
+
+        if (!$producto) {
+            return response()->json(['message' => 'Producto no encontrado con ese código'], 404);
+        }
+
+        // Stock por almacén
+        $stockPorAlmacen = Inventario::with('almacen')
+            ->where('id_producto', $producto->id_producto)
+            ->get()
+            ->map(fn($inv) => [
+                'id_almacen' => $inv->id_almacen,
+                'almacen'    => $inv->almacen->nombre ?? 'Sin almacén',
+                'cantidad'   => $inv->cantidad,
+            ]);
+
+        return response()->json([
+            'producto'          => $producto,
+            'stock_por_almacen' => $stockPorAlmacen,
+        ]);
     }
 
     // POST /api/productos
@@ -66,3 +105,4 @@ class ProductoController extends Controller
         return response()->json(['message' => 'Producto desactivado correctamente']);
     }
 }
+

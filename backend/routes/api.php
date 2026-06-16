@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('categorias-lista', [CategoriaController::class, 'index']);
 
     // Productos
+    Route::get('productos/buscar',     [ProductoController::class, 'buscar']);
     Route::apiResource('productos', ProductoController::class);
 
     // Almacenes
@@ -60,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Ubicaciones del almacén (mapa digital)
     Route::get('almacenes/{id}/ubicaciones',    [UbicacionController::class, 'index']);
     Route::post('almacenes/{id}/ubicaciones',   [UbicacionController::class, 'store']);
+    Route::get('almacenes/{id}/mapa',           [UbicacionController::class, 'mapa']);
     Route::delete('ubicaciones/{id}',           [UbicacionController::class, 'destroy']);
 
     // Reportes CSV

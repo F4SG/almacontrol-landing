@@ -12,7 +12,7 @@ class UbicacionController extends Controller
     // GET /api/almacenes/{id}/ubicaciones
     public function index($almacenId)
     {
-        $almacen = Almacen::findOrFail($almacenId);
+        Almacen::findOrFail($almacenId);
 
         $ubicaciones = Ubicacion::where('id_almacen', $almacenId)
             ->orderBy('pasillo')
@@ -21,6 +21,36 @@ class UbicacionController extends Controller
             ->get();
 
         return response()->json($ubicaciones);
+    }
+
+    // GET /api/almacenes/{id}/mapa — ubicaciones + inventario del almacén
+    public function mapa($almacenId)
+    {
+        $almacen = Almacen::findOrFail($almacenId);
+
+        $ubicaciones = Ubicacion::where('id_almacen', $almacenId)
+            ->orderBy('pasillo')
+            ->orderBy('estante')
+            ->orderBy('nivel')
+            ->get();
+
+        $inventario = \App\Models\Inventario::with(['producto.categoria'])
+            ->where('id_almacen', $almacenId)
+            ->get()
+            ->map(fn($inv) => [
+                'id_producto'  => $inv->id_producto,
+                'nombre'       => $inv->producto->nombre ?? '—',
+                'categoria'    => $inv->producto->categoria->nombre ?? '—',
+                'cantidad'     => $inv->cantidad,
+                'stock_minimo' => $inv->producto->stock_minimo ?? 0,
+                'codigo_barras'=> $inv->producto->codigo_barras ?? null,
+            ]);
+
+        return response()->json([
+            'almacen'     => $almacen,
+            'ubicaciones' => $ubicaciones,
+            'inventario'  => $inventario,
+        ]);
     }
 
     // POST /api/almacenes/{id}/ubicaciones
