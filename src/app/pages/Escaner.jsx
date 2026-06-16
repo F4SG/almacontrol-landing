@@ -255,9 +255,9 @@ export default function Escaner() {
         className={`relative overflow-hidden rounded-2xl bg-gray-900 ${isScanning ? 'block' : 'hidden'}`}
         style={{ minHeight: 240 }}
       >
+        {/* Eliminamos el override de transform para que actúe como un espejo natural (más intuitivo) */}
         <style>{`
           #qr-reader-viewport video {
-            transform: none !important;
             object-fit: cover !important;
           }
         `}</style>
@@ -266,13 +266,24 @@ export default function Escaner() {
 
         {/* Overlay de mira */}
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-          <div className="w-64 h-40 border-2 border-[#F59E0B] rounded-xl opacity-70">
+          <div className="w-72 h-48 border-2 border-[#F59E0B] rounded-xl opacity-70">
             <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-[#F59E0B] rounded-tl-xl" />
             <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-[#F59E0B] rounded-tr-xl" />
             <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-[#F59E0B] rounded-bl-xl" />
             <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-[#F59E0B] rounded-br-xl" />
           </div>
         </div>
+
+        {/* Mensaje de autoenfoque */}
+        {isScanning && (
+          <div className="absolute top-4 left-0 right-0 flex justify-center pointer-events-none">
+            <div className="bg-black/70 backdrop-blur-md px-4 py-2 rounded-full border border-gray-600">
+              <p className="text-white text-xs font-bold text-center">
+                ⚠️ Aleja el producto a unos 20cm para que la cámara enfoque
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Botones sobre cámara */}
         <div className="absolute bottom-3 right-3 flex flex-col gap-2">
