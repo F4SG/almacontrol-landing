@@ -43,7 +43,7 @@ export default function CaptureForm({ onSuccess }) {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const newErrors = validate()
     if (Object.keys(newErrors).length > 0) {
@@ -51,13 +51,31 @@ export default function CaptureForm({ onSuccess }) {
       return
     }
     setSubmitting(true)
-    // Simulate async submission
-    setTimeout(() => {
+    try {
+      const res = await fetch('http://localhost:8000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre:     values.name.split(' ')[0],
+          apellido:   values.name.split(' ').slice(1).join(' ') || '-',
+          correo:     values.email,
+          contrasena: 'Temporal123!',
+          telefono:   null,
+        }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setValues(initialValues)
+        setErrors({})
+        onSuccess()
+      } else {
+        setErrors({ email: data.message || 'Error al registrar. Intenta con otro correo.' })
+      }
+    } catch {
+      setErrors({ email: 'Error de conexión con el servidor' })
+    } finally {
       setSubmitting(false)
-      setValues(initialValues)
-      setErrors({})
-      onSuccess()
-    }, 800)
+    }
   }
 
   const inputClass = (field) =>
