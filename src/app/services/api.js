@@ -185,3 +185,48 @@ export const marcarTodasLeidas = () =>
 // ── Categorías (para formularios) ────────────────────────────────────────────
 export const getCategorias = () =>
   fetch(`${API_BASE}/categorias`, { headers: authHeaders() }).then(handleResponse)
+
+// ── Ubicaciones (mapa del almacén) ───────────────────────────────────────────
+export const getUbicaciones = (almacenId) =>
+  fetch(`${API_BASE}/almacenes/${almacenId}/ubicaciones`, { headers: authHeaders() }).then(handleResponse)
+
+export const createUbicacion = (almacenId, data) =>
+  fetch(`${API_BASE}/almacenes/${almacenId}/ubicaciones`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify(data),
+  }).then(handleResponse)
+
+export const deleteUbicacion = (id) =>
+  fetch(`${API_BASE}/ubicaciones/${id}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
+  }).then(handleResponse)
+
+// ── Reportes CSV ──────────────────────────────────────────────────────────────
+const downloadCsv = async (url, filename) => {
+  const res = await fetch(url, { headers: authHeaders() })
+  if (!res.ok) throw new Error('Error al generar el reporte')
+  const blob = await res.blob()
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(link.href)
+}
+
+export const exportarInventarioCsv = () =>
+  downloadCsv(
+    `${API_BASE}/reportes/inventario-csv`,
+    `inventario_${new Date().toISOString().slice(0,10)}.csv`
+  )
+
+export const exportarMovimientosCsv = (params = {}) => {
+  const qs = new URLSearchParams(Object.fromEntries(Object.entries(params).filter(([, v]) => v))).toString()
+  return downloadCsv(
+    `${API_BASE}/reportes/movimientos-csv${qs ? '?' + qs : ''}`,
+    `movimientos_${new Date().toISOString().slice(0,10)}.csv`
+  )
+}

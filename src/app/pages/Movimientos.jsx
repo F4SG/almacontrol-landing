@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { getMovimientos, getAlmacenes } from '../services/api'
+import { getMovimientos, getAlmacenes, exportarMovimientosCsv } from '../services/api'
 import Spinner from '../components/Spinner'
-import { ArrowLeftRight, ChevronLeft, ChevronRight, Filter } from 'lucide-react'
+import { ArrowLeftRight, ChevronLeft, ChevronRight, Filter, Download } from 'lucide-react'
 
 const TIPOS = ['', 'ENTRADA', 'SALIDA', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'TRANSFERENCIA']
 
@@ -40,9 +40,17 @@ export default function Movimientos() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-extrabold text-gray-900">Movimientos</h1>
-        <p className="text-gray-500 text-sm mt-0.5">Historial de entradas y salidas de inventario</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-extrabold text-gray-900">Movimientos</h1>
+          <p className="text-gray-500 text-sm mt-0.5">Historial de entradas y salidas de inventario</p>
+        </div>
+        <button
+          onClick={() => exportarMovimientosCsv(filters)}
+          className="inline-flex items-center gap-2 px-4 py-2.5 border-2 border-[#1B4332] text-[#1B4332] font-semibold text-sm rounded-xl hover:bg-green-50 transition-colors"
+        >
+          <Download className="w-4 h-4" /> Exportar CSV
+        </button>
       </div>
 
       {/* Filters */}

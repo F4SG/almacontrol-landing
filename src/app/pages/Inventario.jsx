@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { getInventario, getProductos, getAlmacenes, registrarEntrada, registrarSalida } from '../services/api'
+import { getInventario, getProductos, getAlmacenes, registrarEntrada, registrarSalida, exportarInventarioCsv } from '../services/api'
 import Spinner from '../components/Spinner'
-import { ArrowDownCircle, ArrowUpCircle, RefreshCw, AlertTriangle, CheckCircle } from 'lucide-react'
+import { ArrowDownCircle, ArrowUpCircle, RefreshCw, AlertTriangle, CheckCircle, Download } from 'lucide-react'
 
 export default function Inventario() {
   const [inventario, setInventario] = useState([])
@@ -65,9 +65,17 @@ export default function Inventario() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-extrabold text-gray-900">Inventario</h1>
-        <p className="text-gray-500 text-sm mt-0.5">Stock actual y registro de movimientos</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-extrabold text-gray-900">Inventario</h1>
+          <p className="text-gray-500 text-sm mt-0.5">Stock actual y registro de movimientos</p>
+        </div>
+        <button
+          onClick={exportarInventarioCsv}
+          className="inline-flex items-center gap-2 px-4 py-2.5 border-2 border-[#1B4332] text-[#1B4332] font-semibold text-sm rounded-xl hover:bg-green-50 transition-colors"
+        >
+          <Download className="w-4 h-4" /> Exportar CSV
+        </button>
       </div>
 
       <div className="grid lg:grid-cols-5 gap-5">
