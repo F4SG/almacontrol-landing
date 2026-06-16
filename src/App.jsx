@@ -21,6 +21,7 @@ import Dashboard      from './app/pages/Dashboard'
 import Productos      from './app/pages/Productos'
 import ProductoForm   from './app/pages/ProductoForm'
 import Almacenes      from './app/pages/Almacenes'
+import Proveedores    from './app/pages/Proveedores'
 import Inventario     from './app/pages/Inventario'
 import Movimientos    from './app/pages/Movimientos'
 import Ordenes        from './app/pages/Ordenes'
@@ -72,6 +73,7 @@ export default function App() {
       <Route path="/productos/nuevo"  element={<AppPage><ProductoForm /></AppPage>} />
       <Route path="/productos/:id"    element={<AppPage><ProductoForm /></AppPage>} />
       <Route path="/almacenes"        element={<AppPage><Almacenes /></AppPage>} />
+      <Route path="/proveedores"      element={<AppPage><Proveedores /></AppPage>} />
       <Route path="/inventario"       element={<AppPage><Inventario /></AppPage>} />
       <Route path="/movimientos"      element={<AppPage><Movimientos /></AppPage>} />
       <Route path="/ordenes"          element={<AppPage><Ordenes /></AppPage>} />
