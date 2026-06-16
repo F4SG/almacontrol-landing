@@ -222,17 +222,18 @@ export default function Escaner() {
                      state === STATES.SUCCESS    || state === STATES.ERROR
 
   return (
-    <div className="max-w-lg mx-auto space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-extrabold text-gray-900">Escáner</h1>
-          <p className="text-gray-500 text-sm mt-0.5">QR, EAN-13, CODE128 y más</p>
-        </div>
+    <div className="absolute inset-0 bg-gray-950 p-6 overflow-y-auto">
+      <div className="max-w-lg mx-auto space-y-4">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-extrabold text-white">Escáner</h1>
+            <p className="text-gray-400 text-sm mt-0.5">QR, EAN-13, CODE128 y más</p>
+          </div>
         {isScanning && (
           <button
             onClick={stopScanner}
-            className="inline-flex items-center gap-2 px-3 py-2 border-2 border-red-200 text-red-600 text-sm font-semibold rounded-xl hover:bg-red-50 transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-2 border-2 border-red-500/30 text-red-400 text-sm font-semibold rounded-xl hover:bg-red-500/10 transition-colors"
           >
             <CameraOff className="w-4 h-4" /> Detener
           </button>
@@ -295,25 +296,25 @@ export default function Escaner() {
 
       {/* Botón inicial */}
       {state === STATES.IDLE && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center space-y-5">
-          <div className="w-20 h-20 bg-[#1B4332]/10 rounded-2xl flex items-center justify-center mx-auto">
-            <Scan className="w-10 h-10 text-[#1B4332]" />
+        <div className="bg-gray-900 rounded-2xl shadow-lg border border-gray-800 p-8 text-center space-y-5">
+          <div className="w-20 h-20 bg-[#F59E0B]/10 rounded-2xl flex items-center justify-center mx-auto">
+            <Scan className="w-10 h-10 text-[#F59E0B]" />
           </div>
           <div>
-            <p className="font-bold text-gray-900 text-lg">Escáner de productos</p>
-            <p className="text-gray-500 text-sm mt-1">
+            <p className="font-bold text-white text-lg">Escáner de productos</p>
+            <p className="text-gray-400 text-sm mt-1">
               Activa la cámara para escanear códigos QR o de barras y registrar movimientos sin teclado
             </p>
           </div>
           <button
             onClick={startScanner}
-            className="w-full flex items-center justify-center gap-3 py-4 bg-[#1B4332] text-white font-bold text-base rounded-2xl hover:bg-[#163829] transition-colors shadow-md"
+            className="w-full flex items-center justify-center gap-3 py-4 bg-[#F59E0B] text-gray-900 font-bold text-base rounded-2xl hover:bg-[#d98b09] transition-colors shadow-md"
           >
             <Camera className="w-5 h-5" /> Activar cámara
           </button>
           <button
             onClick={() => setShowManual(true)}
-            className="w-full flex items-center justify-center gap-2 py-3 border-2 border-gray-200 text-gray-600 font-semibold text-sm rounded-2xl hover:bg-gray-50 transition-colors"
+            className="w-full flex items-center justify-center gap-2 py-3 border-2 border-gray-700 text-gray-300 font-semibold text-sm rounded-2xl hover:bg-gray-800 transition-colors"
           >
             <Keyboard className="w-4 h-4" /> Ingresar código manualmente
           </button>
@@ -352,16 +353,16 @@ export default function Escaner() {
 
       {/* Panel NOT FOUND */}
       {state === STATES.NOTFOUND && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center space-y-4">
-          <div className="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto">
+        <div className="bg-gray-900 rounded-2xl shadow-lg border border-gray-800 p-6 text-center space-y-4">
+          <div className="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mx-auto">
             <AlertTriangle className="w-7 h-7 text-orange-500" />
           </div>
-          <p className="font-bold text-gray-900">Código no encontrado</p>
-          <p className="text-gray-500 text-sm">{feedback}</p>
-          <p className="text-xs text-gray-400">
-            ¿Quieres agregar este producto? Ve a <strong>Productos → Nuevo</strong> y completa el campo "Código de barras".
+          <p className="font-bold text-white">Código no encontrado</p>
+          <p className="text-gray-400 text-sm">{feedback}</p>
+          <p className="text-xs text-gray-500">
+            ¿Quieres agregar este producto? Ve a <strong className="text-gray-300">Productos → Nuevo</strong> y completa el campo "Código de barras".
           </p>
-          <button onClick={reset} className="w-full py-3 bg-[#1B4332] text-white font-bold rounded-xl hover:bg-[#163829]">
+          <button onClick={reset} className="w-full py-3 bg-gray-800 border border-gray-700 text-white font-bold rounded-xl hover:bg-gray-700">
             Escanear otro
           </button>
         </div>
@@ -369,13 +370,13 @@ export default function Escaner() {
 
       {/* Panel ERROR */}
       {state === STATES.ERROR && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center space-y-4">
-          <div className="w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center mx-auto">
+        <div className="bg-gray-900 rounded-2xl shadow-lg border border-gray-800 p-6 text-center space-y-4">
+          <div className="w-14 h-14 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto">
             <AlertTriangle className="w-7 h-7 text-red-500" />
           </div>
-          <p className="font-bold text-gray-900">Error</p>
-          <p className="text-gray-500 text-sm">{feedback}</p>
-          <button onClick={reset} className="w-full py-3 bg-[#1B4332] text-white font-bold rounded-xl hover:bg-[#163829]">
+          <p className="font-bold text-white">Error</p>
+          <p className="text-gray-400 text-sm">{feedback}</p>
+          <button onClick={reset} className="w-full py-3 bg-gray-800 border border-gray-700 text-white font-bold rounded-xl hover:bg-gray-700">
             Reintentar
           </button>
         </div>
@@ -383,44 +384,44 @@ export default function Escaner() {
 
       {/* Panel SUCCESS */}
       {state === STATES.SUCCESS && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center space-y-3">
-          <div className="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center mx-auto">
-            <CheckCircle className="w-7 h-7 text-green-600" />
+        <div className="bg-gray-900 rounded-2xl shadow-lg border border-gray-800 p-6 text-center space-y-3">
+          <div className="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center mx-auto">
+            <CheckCircle className="w-7 h-7 text-emerald-500" />
           </div>
-          <p className="font-bold text-gray-900 text-lg">{feedback}</p>
-          <p className="text-gray-400 text-sm">Volviendo al escáner...</p>
+          <p className="font-bold text-white text-lg">{feedback}</p>
+          <p className="text-gray-500 text-sm">Volviendo al escáner...</p>
         </div>
       )}
 
       {/* Panel PRODUCTO ENCONTRADO */}
       {state === STATES.FOUND && producto && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-gray-900 rounded-2xl shadow-lg border border-gray-800 overflow-hidden">
           {/* Cabecera del producto */}
-          <div className="bg-[#1B4332] px-5 py-4 flex items-center gap-4">
-            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-              <Package className="w-6 h-6 text-white" />
+          <div className="bg-[#F59E0B] px-5 py-4 flex items-center gap-4">
+            <div className="w-12 h-12 bg-black/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Package className="w-6 h-6 text-gray-900" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white font-bold text-base truncate">{producto.nombre}</p>
-              <p className="text-green-200 text-xs">{producto.categoria?.nombre ?? '—'}</p>
+              <p className="text-gray-900 font-bold text-base truncate">{producto.nombre}</p>
+              <p className="text-orange-900 text-xs font-medium">{producto.categoria?.nombre ?? '—'}</p>
             </div>
-            <button onClick={reset} className="p-1.5 rounded-lg text-green-200 hover:bg-white/20">
+            <button onClick={reset} className="p-1.5 rounded-lg text-orange-900 hover:bg-black/10 transition-colors">
               <X className="w-4 h-4" />
             </button>
           </div>
 
           {/* Stock por almacén */}
-          <div className="px-5 py-3 border-b border-gray-100">
-            <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Stock actual</p>
+          <div className="px-5 py-4 border-b border-gray-800 bg-gray-900/50">
+            <p className="text-xs font-bold text-gray-500 uppercase mb-2">Stock actual</p>
             {stockInfo.length === 0 ? (
-              <p className="text-gray-400 text-sm">Sin stock registrado</p>
+              <p className="text-gray-500 text-sm">Sin stock registrado</p>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {stockInfo.map((s, i) => (
-                  <span key={i} className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${
-                    s.cantidad === 0 ? 'bg-red-100 text-red-700' :
-                    s.cantidad <= (producto.stock_minimo ?? 0) ? 'bg-orange-100 text-orange-700' :
-                    'bg-green-100 text-green-700'
+                  <span key={i} className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border ${
+                    s.cantidad === 0 ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                    s.cantidad <= (producto.stock_minimo ?? 0) ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
+                    'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                   }`}>
                     {s.almacen}: {s.cantidad} {producto.unidad_medida ?? 'unid.'}
                   </span>
@@ -430,14 +431,14 @@ export default function Escaner() {
           </div>
 
           {/* Formulario de movimiento */}
-          <div className="px-5 py-4 space-y-4">
-            <p className="text-xs font-semibold text-gray-500 uppercase">Registrar movimiento</p>
+          <div className="px-5 py-4 space-y-4 bg-gray-900">
+            <p className="text-xs font-bold text-gray-500 uppercase">Registrar movimiento</p>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Almacén *</label>
+              <label className="block text-sm font-semibold text-gray-400 mb-1.5">Almacén *</label>
               <select
                 value={form.id_almacen}
                 onChange={e => setForm(p => ({ ...p, id_almacen: e.target.value }))}
-                className="w-full px-3 py-3 border-2 border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#1B4332] bg-white"
+                className="w-full px-3 py-3 border-2 border-gray-700 rounded-xl text-sm focus:outline-none focus:border-[#F59E0B] bg-gray-800 text-white"
               >
                 <option value="">Seleccionar almacén...</option>
                 {almacenes.map(a => (
@@ -451,23 +452,23 @@ export default function Escaner() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Cantidad *</label>
+              <label className="block text-sm font-semibold text-gray-400 mb-1.5">Cantidad *</label>
               <div className="flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => setForm(p => ({ ...p, cantidad: Math.max(1, p.cantidad - 1) }))}
-                  className="w-12 h-12 bg-gray-100 hover:bg-gray-200 rounded-xl text-xl font-bold text-gray-700 flex items-center justify-center transition-colors"
+                  className="w-12 h-12 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-xl text-xl font-bold text-gray-300 flex items-center justify-center transition-colors"
                 >−</button>
                 <input
                   type="number" min="1"
                   value={form.cantidad}
                   onChange={e => setForm(p => ({ ...p, cantidad: Math.max(1, parseInt(e.target.value) || 1) }))}
-                  className="flex-1 text-center text-2xl font-extrabold py-2.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#1B4332]"
+                  className="flex-1 text-center text-2xl font-extrabold py-2.5 border-2 border-gray-700 bg-gray-800 text-white rounded-xl focus:outline-none focus:border-[#F59E0B]"
                 />
                 <button
                   type="button"
                   onClick={() => setForm(p => ({ ...p, cantidad: p.cantidad + 1 }))}
-                  className="w-12 h-12 bg-gray-100 hover:bg-gray-200 rounded-xl text-xl font-bold text-gray-700 flex items-center justify-center transition-colors"
+                  className="w-12 h-12 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-xl text-xl font-bold text-gray-300 flex items-center justify-center transition-colors"
                 >+</button>
               </div>
             </div>
@@ -475,7 +476,7 @@ export default function Escaner() {
             <div className="grid grid-cols-2 gap-3 pt-1">
               <button
                 onClick={() => handleRegistrar('ENTRADA')}
-                className="flex items-center justify-center gap-2 py-4 bg-[#1B4332] text-white font-bold text-sm rounded-xl hover:bg-[#163829] transition-colors shadow-md"
+                className="flex items-center justify-center gap-2 py-4 bg-emerald-600 text-white font-bold text-sm rounded-xl hover:bg-emerald-700 transition-colors shadow-md"
               >
                 <ArrowDownCircle className="w-5 h-5" /> Entrada
               </button>
@@ -492,24 +493,25 @@ export default function Escaner() {
 
       {/* Panel REGISTRANDO */}
       {state === STATES.REGISTERING && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
+        <div className="bg-gray-900 rounded-2xl shadow-lg border border-gray-800 p-8 text-center">
           <Spinner size="lg" />
-          <p className="text-gray-600 font-medium mt-4">Registrando movimiento...</p>
+          <p className="text-gray-400 font-medium mt-4">Registrando movimiento...</p>
         </div>
       )}
 
       {/* Información de ayuda */}
       {state === STATES.IDLE && (
-        <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4">
-          <p className="text-amber-800 text-sm font-semibold mb-2">💡 Consejos de uso</p>
-          <ul className="text-amber-700 text-xs space-y-1">
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4">
+          <p className="text-orange-400 text-sm font-semibold mb-2">💡 Consejos de uso</p>
+          <ul className="text-gray-400 text-xs space-y-1">
             <li>• Usa la cámara trasera del celular para mejor lectura</li>
             <li>• Soporta: QR, EAN-13, CODE-128, UPC-A, CODE-39</li>
-            <li>• Asegúrate de que los productos tengan código de barras en <strong>Productos → Editar</strong></li>
+            <li>• Asegúrate de que los productos tengan código de barras en <strong className="text-gray-300">Productos → Editar</strong></li>
             <li>• Si no tienes cámara, usa el botón "Ingresar código manualmente"</li>
           </ul>
         </div>
       )}
+      </div>
     </div>
   )
 }
