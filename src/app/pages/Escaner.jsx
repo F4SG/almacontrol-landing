@@ -47,9 +47,20 @@ export default function Escaner() {
     getAlmacenes().then(setAlmacenes).catch(() => {})
   }, [])
 
-  // Buscar cámaras disponibles
+  // Buscar cámaras disponibles y pre-seleccionar la mejor (trasera si existe, sino la primera)
   useEffect(() => {
-    Html5Qrcode.getCameras().then(setCameras).catch(() => {})
+    Html5Qrcode.getCameras().then(cams => {
+      setCameras(cams)
+      if (cams.length > 0) {
+        const backCam = cams.find(c => 
+          c.label.toLowerCase().includes('back') || 
+          c.label.toLowerCase().includes('environment') || 
+          c.label.toLowerCase().includes('trasera') || 
+          c.label.toLowerCase().includes('posterior')
+        )
+        setCameraId(backCam ? backCam.id : cams[0].id)
+      }
+    }).catch(() => {})
   }, [])
 
   const buscarProducto = useCallback(async (codigo) => {
