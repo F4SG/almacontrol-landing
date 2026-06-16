@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { logout } from '../services/api'
 import {
@@ -23,6 +23,7 @@ const navItems = [
 export default function AppLayout({ children }) {
   const { user, logoutUser } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const handleLogout = async () => {
@@ -117,17 +118,29 @@ export default function AppLayout({ children }) {
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top bar */}
-        <header className="h-14 bg-white border-b border-gray-200 flex items-center gap-3 px-4 flex-shrink-0">
+        <header className={`h-14 border-b flex items-center gap-3 px-4 flex-shrink-0 transition-colors ${
+          location.pathname === '/escaner' 
+            ? 'bg-gray-950 border-gray-800' 
+            : 'bg-white border-gray-200'
+        }`}>
           <button
             onClick={() => setSidebarOpen(true)}
-            className="md:hidden p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+            className={`md:hidden p-1.5 rounded-lg transition-colors ${
+              location.pathname === '/escaner'
+                ? 'text-gray-400 hover:bg-gray-800'
+                : 'text-gray-500 hover:bg-gray-100'
+            }`}
           >
             <Menu className="w-5 h-5" />
           </button>
           <div className="flex-1" />
           <NavLink
             to="/alertas"
-            className="relative p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-[#1B4332] transition-colors"
+            className={`relative p-1.5 rounded-lg transition-colors ${
+              location.pathname === '/escaner'
+                ? 'text-gray-400 hover:bg-gray-800 hover:text-[#F59E0B]'
+                : 'text-gray-500 hover:bg-gray-100 hover:text-[#1B4332]'
+            }`}
           >
             <Bell className="w-5 h-5" />
           </NavLink>
