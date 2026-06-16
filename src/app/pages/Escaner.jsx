@@ -85,38 +85,45 @@ export default function Escaner() {
     }
   }, [lastCode])
 
-  const startScanner = useCallback(async () => {
+  const startScanner = useCallback(() => {
     if (scannerRef.current) return
-    const scanner = new Html5Qrcode(domId)
-    scannerRef.current = scanner
+    
+    // 1. Mostrar el contenedor primero para que tenga dimensiones (no display: none)
+    setState(STATES.SCANNING)
 
-    const config = {
-      fps: 10,
-      qrbox: { width: 260, height: 180 },
-      formatsToSupport: SUPPORTED_FORMATS,
-      aspectRatio: 1.5,
-      disableFlip: false,
-    }
+    // 2. Esperar a que React renderice el div visible antes de iniciar el escáner
+    setTimeout(async () => {
+      const scanner = new Html5Qrcode(domId)
+      scannerRef.current = scanner
 
-    const camConfig = cameraId
-      ? { deviceId: { exact: cameraId } }
-      : { facingMode: 'environment' }
+      const config = {
+        fps: 10,
+        qrbox: { width: 260, height: 180 },
+        formatsToSupport: SUPPORTED_FORMATS,
+        aspectRatio: 1.5,
+        disableFlip: false,
+      }
 
-    try {
-      await scanner.start(
-        camConfig,
-        config,
-        (decodedText) => {
-          buscarProducto(decodedText.trim())
-        },
-        () => {} // suppress errors during scanning
-      )
-      setState(STATES.SCANNING)
-    } catch (err) {
-      setState(STATES.ERROR)
-      setFeedback('No se pudo acceder a la cámara. Verifica los permisos.')
-      scannerRef.current = null
-    }
+      const camConfig = cameraId
+        ? { deviceId: { exact: cameraId } }
+        : { facingMode: 'environment' }
+
+      try {
+        await scanner.start(
+          camConfig,
+          config,
+          (decodedText) => {
+            buscarProducto(decodedText.trim())
+          },
+          () => {} // suppress errors during scanning
+        )
+      } catch (err) {
+        console.error("Scanner Error:", err)
+        setState(STATES.ERROR)
+        setFeedback('No se pudo acceder a la cámara. Verifica los permisos de tu navegador.')
+        scannerRef.current = null
+      }
+    }, 100)
   }, [cameraId, buscarProducto])
 
   const stopScanner = useCallback(async () => {
