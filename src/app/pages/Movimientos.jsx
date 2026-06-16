@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { getMovimientos, getAlmacenes, exportarMovimientosCsv } from '../services/api'
 import Spinner from '../components/Spinner'
-import { ArrowLeftRight, ChevronLeft, ChevronRight, Filter, Download } from 'lucide-react'
+import { ArrowLeftRight, ChevronLeft, ChevronRight, Filter, Download, Printer } from 'lucide-react'
+import ReporteImprimible from '../components/ReporteImprimible'
 
 const TIPOS = ['', 'ENTRADA', 'SALIDA', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'TRANSFERENCIA']
 
@@ -17,6 +18,7 @@ export default function Movimientos() {
   const [data,      setData]      = useState(null)
   const [almacenes, setAlmacenes] = useState([])
   const [loading,   setLoading]   = useState(true)
+  const [showPdf,   setShowPdf]   = useState(false)
   const [page,      setPage]      = useState(1)
   const [filters,   setFilters]   = useState({ almacen_id: '', tipo: '', fecha_desde: '', fecha_hasta: '' })
 
@@ -40,18 +42,42 @@ export default function Movimientos() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-gray-900">Movimientos</h1>
           <p className="text-gray-500 text-sm mt-0.5">Historial de entradas y salidas de inventario</p>
         </div>
-        <button
-          onClick={() => exportarMovimientosCsv(filters)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 border-2 border-[#1B4332] text-[#1B4332] font-semibold text-sm rounded-xl hover:bg-green-50 transition-colors"
-        >
-          <Download className="w-4 h-4" /> Exportar CSV
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => exportarMovimientosCsv(filters)}
+            className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 text-gray-700 font-semibold text-sm rounded-xl hover:bg-gray-50 transition-colors shadow-sm"
+          >
+            <Download className="w-4 h-4 text-emerald-600" /> Exportar CSV
+          </button>
+          <button
+            onClick={() => setShowPdf(true)}
+            className="inline-flex items-center gap-2 px-3 py-2 bg-[#F59E0B] text-gray-900 font-bold text-sm rounded-xl hover:bg-[#d98b09] transition-colors shadow-sm"
+          >
+            <Printer className="w-4 h-4" /> Imprimir PDF
+          </button>
+        </div>
       </div>
+
+      {showPdf && (
+        <ReporteImprimible
+          titulo="Reporte de Movimientos"
+          subtitulo="Historial de Entradas y Salidas de Inventario"
+          columnas={[
+            { header: 'Fecha', render: (r) => new Date(r.fecha).toLocaleString() },
+            { header: 'Tipo', render: (r) => r.tipo_movimiento },
+            { header: 'Producto', render: (r) => r.producto?.nombre },
+            { header: 'Almacén', render: (r) => r.almacen?.nombre },
+            { header: 'Cantidad', accessor: 'cantidad', align: 'right' }
+          ]}
+          datos={rows}
+          onClose={() => setShowPdf(false)}
+        />
+      )}
 
       {/* Filters */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">

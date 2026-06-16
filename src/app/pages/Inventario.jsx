@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { getInventario, getProductos, getAlmacenes, registrarEntrada, registrarSalida, exportarInventarioCsv } from '../services/api'
 import Spinner from '../components/Spinner'
-import { ArrowDownCircle, ArrowUpCircle, RefreshCw, AlertTriangle, CheckCircle, Download } from 'lucide-react'
+import { ArrowDownCircle, ArrowUpCircle, RefreshCw, AlertTriangle, CheckCircle, Download, Printer } from 'lucide-react'
+import ReporteImprimible from '../components/ReporteImprimible'
 
 export default function Inventario() {
   const [inventario, setInventario] = useState([])
+  const [showPdf, setShowPdf] = useState(false)
   const [productos,  setProductos]  = useState([])
   const [almacenes,  setAlmacenes]  = useState([])
   const [loading,    setLoading]    = useState(true)
@@ -65,18 +67,50 @@ export default function Inventario() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <div>
           <h1 className="text-2xl font-extrabold text-gray-900">Inventario</h1>
-          <p className="text-gray-500 text-sm mt-0.5">Stock actual y registro de movimientos</p>
+          <p className="text-gray-500 text-sm mt-0.5">Control de stock y registros manuales</p>
         </div>
-        <button
-          onClick={exportarInventarioCsv}
-          className="inline-flex items-center gap-2 px-4 py-2.5 border-2 border-[#1B4332] text-[#1B4332] font-semibold text-sm rounded-xl hover:bg-green-50 transition-colors"
-        >
-          <Download className="w-4 h-4" /> Exportar CSV
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={exportarInventarioCsv}
+            className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 text-gray-700 font-semibold text-sm rounded-xl hover:bg-gray-50 transition-colors shadow-sm"
+          >
+            <Download className="w-4 h-4 text-emerald-600" /> Exportar CSV
+          </button>
+          <button
+            onClick={() => setShowPdf(true)}
+            className="inline-flex items-center gap-2 px-3 py-2 bg-[#F59E0B] text-gray-900 font-bold text-sm rounded-xl hover:bg-[#d98b09] transition-colors shadow-sm"
+          >
+            <Printer className="w-4 h-4" /> Imprimir PDF
+          </button>
+        </div>
       </div>
+
+      {showPdf && (
+        <ReporteImprimible
+          titulo="Reporte de Inventario Actual"
+          subtitulo="Consolidado de stock disponible en todos los almacenes"
+          columnas={[
+            { header: 'Producto', render: (r) => r.producto?.nombre },
+            { header: 'Almacén', render: (r) => r.almacen?.nombre },
+            { header: 'Stock Min.', render: (r) => r.producto?.stock_minimo ?? 0, align: 'center' },
+            { header: 'Cantidad', accessor: 'cantidad', align: 'right' },
+            { 
+              header: 'Estado', 
+              align: 'center',
+              render: (row) => {
+                if (row.cantidad === 0) return 'Sin stock'
+                if (row.cantidad <= (row.producto?.stock_minimo ?? 0)) return 'Bajo'
+                return 'Normal'
+              }
+            }
+          ]}
+          datos={inventario}
+          onClose={() => setShowPdf(false)}
+        />
+      )}
 
       <div className="grid lg:grid-cols-5 gap-5">
         {/* Stock table (left — 3/5) */}
