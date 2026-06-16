@@ -212,12 +212,7 @@ export default function Escaner() {
     }
   }
 
-  const switchCamera = async () => {
-    await stopScanner()
-    const next = cameras.find(c => c.id !== cameraId)
-    setCameraId(next?.id ?? null)
-    setTimeout(() => startScanner(), 300)
-  }
+
 
   // ── Render ────────────────────────────────────────────────────────────────
   const isScanning = state === STATES.SCANNING || state === STATES.FOUND ||
