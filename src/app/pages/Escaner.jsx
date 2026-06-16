@@ -85,6 +85,24 @@ export default function Escaner() {
     }
   }, [lastCode])
 
+  // Utilidad para emitir un sonido "Beep" corto al escanear
+  const playBeep = () => {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext
+      if (!AudioContext) return
+      const ctx = new AudioContext()
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(800, ctx.currentTime)
+      gain.gain.setValueAtTime(0.1, ctx.currentTime)
+      osc.start()
+      osc.stop(ctx.currentTime + 0.1)
+    } catch (e) { console.warn("AudioContext no soportado") }
+  }
+
   const startScanner = useCallback(() => {
     if (scannerRef.current) return
     
@@ -101,7 +119,7 @@ export default function Escaner() {
         qrbox: { width: 260, height: 180 },
         formatsToSupport: SUPPORTED_FORMATS,
         aspectRatio: 1.5,
-        disableFlip: false,
+        disableFlip: true, // Evita que la cámara se vea "espejada" (invertida)
       }
 
       const camConfig = cameraId
@@ -113,6 +131,7 @@ export default function Escaner() {
           camConfig,
           config,
           (decodedText) => {
+            playBeep()
             buscarProducto(decodedText.trim())
           },
           () => {} // suppress errors during scanning
