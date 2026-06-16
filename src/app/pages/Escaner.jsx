@@ -245,6 +245,13 @@ export default function Escaner() {
         className={`relative overflow-hidden rounded-2xl bg-gray-900 ${isScanning ? 'block' : 'hidden'}`}
         style={{ minHeight: 240 }}
       >
+        <style>{`
+          #qr-reader-viewport video {
+            transform: none !important;
+            object-fit: cover !important;
+          }
+        `}</style>
+
         <div id={domId} className="w-full" />
 
         {/* Overlay de mira */}
