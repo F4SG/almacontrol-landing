@@ -118,6 +118,13 @@ export default function Escaner() {
         fps: 20, // Suficientemente rápido pero estable
         qrbox: { width: 350, height: 200 }, // Rectángulo ancho para códigos de barras
         formatsToSupport: SUPPORTED_FORMATS,
+        // Solicita alta resolución opcionalmente (no obliga, evita crash)
+        videoConstraints: {
+          advanced: [
+            { width: 1920, height: 1080 },
+            { width: 1280, height: 720 }
+          ]
+        }
       }
 
       // Configuración de cámara segura (sin forzar HD que causa crash en algunas webcams)
