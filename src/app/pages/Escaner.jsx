@@ -35,7 +35,7 @@ export default function Escaner() {
   const [feedback, setFeedback]   = useState('')
   const [manualCode, setManualCode] = useState('')
   const [showManual, setShowManual] = useState(false)
-  const [cameraId, setCameraId]   = useState(null) // null = trasera
+  const [facingMode, setFacingMode] = useState('environment')
   const [cameras, setCameras]     = useState([])
   const [lastCode, setLastCode]   = useState('')
 
@@ -47,18 +47,20 @@ export default function Escaner() {
     getAlmacenes().then(setAlmacenes).catch(() => {})
   }, [])
 
-  // Buscar cámaras disponibles y pre-seleccionar la mejor (trasera si existe, sino la primera)
+  // Buscar cámaras disponibles y determinar si usamos frontal o trasera
   useEffect(() => {
     Html5Qrcode.getCameras().then(cams => {
       setCameras(cams)
-      if (cams.length > 0) {
-        const backCam = cams.find(c => 
-          c.label.toLowerCase().includes('back') || 
-          c.label.toLowerCase().includes('environment') || 
-          c.label.toLowerCase().includes('trasera') || 
-          c.label.toLowerCase().includes('posterior')
-        )
-        setCameraId(backCam ? backCam.id : cams[0].id)
+      const hasBack = cams.some(c => 
+        c.label.toLowerCase().includes('back') || 
+        c.label.toLowerCase().includes('environment') || 
+        c.label.toLowerCase().includes('trasera') || 
+        c.label.toLowerCase().includes('posterior')
+      )
+      if (!hasBack) {
+        setFacingMode('user') // Laptop webcam
+      } else {
+        setFacingMode('environment') // Celular
       }
     }).catch(() => {})
   }, [])
@@ -70,22 +72,20 @@ export default function Escaner() {
       const res = await buscarProductoPorCodigo(codigo)
       setProducto(res.producto)
       setStockInfo(res.stock_por_almacen ?? [])
-      // Preseleccionar almacén si hay uno con stock
       const conStock = res.stock_por_almacen?.find(s => s.cantidad > 0)
       setForm({ id_almacen: conStock?.id_almacen ?? '', cantidad: 1 })
       setState(STATES.FOUND)
     } catch (err) {
       if (err?.message?.includes('no encontrado') || err?.status === 404) {
         setState(STATES.NOTFOUND)
-        setFeedback(`Código "${codigo}" no registrado en el sistema`)
+        setFeedback(`Código "${codigo}" no registrado`)
       } else {
         setState(STATES.ERROR)
-        setFeedback(err?.message || 'Error de conexión con el servidor')
+        setFeedback(err?.message || 'Error de conexión')
       }
     }
   }, [lastCode])
 
-  // Utilidad para emitir un sonido "Beep" corto al escanear
   const playBeep = () => {
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext
@@ -105,35 +105,21 @@ export default function Escaner() {
 
   const startScanner = useCallback(() => {
     if (scannerRef.current) return
-    
-    // 1. Mostrar el contenedor primero para que tenga dimensiones (no display: none)
     setState(STATES.SCANNING)
 
-    // 2. Esperar a que React renderice el div visible antes de iniciar el escáner
     setTimeout(async () => {
       const scanner = new Html5Qrcode(domId)
       scannerRef.current = scanner
 
       const config = {
-        fps: 20, 
-        qrbox: { width: 350, height: 200 }, 
+        fps: 10, // 10 FPS es el estándar más estable para decodificación en JS
+        qrbox: { width: 250, height: 150 }, // Caja pequeña para obligar a enfocar bien
         formatsToSupport: SUPPORTED_FORMATS,
-        disableFlip: false, // Permitimos que la librería maneje el flip interno si lo necesita
-        experimentalFeatures: {
-          useBarCodeDetectorIfSupported: true // Extremadamente importante para leer 1D rápido en PC
-        },
-        videoConstraints: {
-          advanced: [
-            { width: 1920, height: 1080 },
-            { width: 1280, height: 720 }
-          ]
-        }
+        disableFlip: false, // CRÍTICO: permite a la librería des-espejar el video internamente
       }
 
-      // Configuración de cámara segura (sin forzar HD que causa crash en algunas webcams)
-      const camConfig = cameraId
-        ? { deviceId: { exact: cameraId } }
-        : { facingMode: 'environment' }
+      // Usar facingMode es mucho más robusto que deviceId en html5-qrcode
+      const camConfig = { facingMode: facingMode }
 
       try {
         await scanner.start(
@@ -143,25 +129,32 @@ export default function Escaner() {
             playBeep()
             buscarProducto(decodedText.trim())
           },
-          () => {} // suppress errors during scanning
+          () => {} 
         )
       } catch (err) {
         console.error("Scanner Error:", err)
         setState(STATES.ERROR)
-        setFeedback('No se pudo acceder a la cámara. Verifica los permisos de tu navegador.')
+        setFeedback('Error al iniciar la cámara. Verifica los permisos.')
         scannerRef.current = null
       }
     }, 100)
-  }, [cameraId, buscarProducto])
+  }, [facingMode, buscarProducto])
 
   const stopScanner = useCallback(async () => {
     if (scannerRef.current) {
-      try { await scannerRef.current.stop() } catch {}
+      await scannerRef.current.stop().catch(() => {})
+      scannerRef.current.clear()
       scannerRef.current = null
     }
     setState(STATES.IDLE)
     setLastCode('')
   }, [])
+
+  const switchCamera = useCallback(async () => {
+    await stopScanner()
+    setFacingMode(prev => prev === 'environment' ? 'user' : 'environment')
+    setTimeout(() => startScanner(), 300)
+  }, [stopScanner, startScanner])
 
   useEffect(() => {
     return () => {
