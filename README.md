@@ -134,109 +134,48 @@ SELECT * FROM personal_access_tokens;
 
 ---
 
-## 🧪 Probar la API con Postman / Thunder Client
+## 📖 Guía de Uso del Sistema (Flujo Completo)
 
-### 1 — Registrar usuario nuevo
-```http
-POST http://localhost:8000/api/auth/register
-Content-Type: application/json
+Para experimentar cómo funciona AlmaControl en la vida real, te recomendamos seguir este flujo paso a paso:
 
-{
-  "nombre": "Carlos",
-  "apellido": "Mendoza",
-  "correo": "carlos@empresa.com",
-  "contrasena": "password123",
-  "telefono": "70123456"
-}
-```
-**Respuesta esperada (201):**
-```json
-{ "token": "1|abc...", "user": { "id_usuario": 2, "nombre": "Carlos", ... } }
-```
+### 1. Registro y Acceso
+1. Entra a **http://localhost:5173/register** y crea una cuenta nueva.
+2. Inicia sesión. Serás redirigido al **Dashboard**, que inicialmente estará en ceros.
 
-### 2 — Login
-```http
-POST http://localhost:8000/api/auth/login
-Content-Type: application/json
+### 2. Configuración Inicial (Bases del Almacén)
+1. Ve a **Almacenes** en el menú lateral. Haz clic en "Nuevo almacén" y créalo.
+2. En la tarjeta del almacén, haz clic en **Ubicaciones** y agrega algunos espacios (ej: Pasillo 1, Estante 1, Nivel 1).
+3. Ve a **Proveedores** y registra al menos un proveedor para tu mercadería.
 
-{
-  "correo": "admin@almacontrol.bo",
-  "contrasena": "Admin123!"
-}
-```
-**Respuesta esperada (200):**
-```json
-{ "token": "2|Qkr7...", "user": { "id_usuario": 1, "rol": { "nombre": "Administrador" } } }
-```
+### 3. Crear el Catálogo de Productos
+1. Ve a **Productos** -> **Nuevo producto**.
+2. Completa los datos. **💡 Puntos clave para probar:**
+   - Escribe un **Código de barras** real (puedes tomar cualquier producto que tengas a mano).
+   - Establece un **Stock mínimo** (ej. 10) para ver cómo funcionan las alertas automáticas.
 
-> ⚠️ Copia el `token` de la respuesta para los siguientes requests.
+### 4. Ingreso de Mercadería y Mapa Visual
+1. Ve a **Inventario** -> **Registrar Movimiento**.
+2. Selecciona tipo **Entrada**, elige tu producto, tu almacén y registra una cantidad inicial alta (ej. 50).
+3. Vuelve a **Almacenes** y haz clic en **Ver mapa**. 
+   - Verás el mapa en grilla 2D. La celda estará en **Verde (Normal)**.
+   - Si haces clic en la celda, verás el detalle de los productos guardados en ese estante.
 
-### 3 — Dashboard (requiere token)
-```http
-GET http://localhost:8000/api/dashboard
-Authorization: Bearer 2|Qkr7...
-```
+### 5. Escáner Móvil (Cámara)
+1. Ve a la pestaña **Escáner** desde tu computadora (si tiene webcam) o desde tu celular.
+2. Apunta la cámara al código de barras real del producto que registraste en el paso 3.
+3. El sistema lo detectará automáticamente y te mostrará su stock actual.
+4. Registra una **Salida** de stock rápidamente desde allí mismo, sin usar el teclado.
 
-### 4 — Listar productos
-```http
-GET http://localhost:8000/api/productos
-Authorization: Bearer 2|Qkr7...
-```
+### 6. Alertas de Stock y Órdenes de Reposición a 1-Clic
+1. Realiza más **Salidas** (desde el Escáner o Inventario) hasta que el stock de tu producto baje del mínimo que estableciste (ej. que queden 5 unidades).
+2. Verás que la campana de **Alertas** (arriba a la derecha) se ilumina.
+3. Ve a la página de **Alertas**. Ahí estará la notificación de *STOCK MÍNIMO*.
+4. Haz clic en el botón **"Reponer"** dentro de la alerta. Te abrirá un modal rápido.
+5. Elige la cantidad a pedir y haz clic. ¡Listo! El sistema habrá generado una **Orden de Compra** automáticamente y habrá marcado la alerta como leída.
 
-### 5 — Crear producto
-```http
-POST http://localhost:8000/api/productos
-Authorization: Bearer 2|Qkr7...
-Content-Type: application/json
-
-{
-  "nombre": "Arroz 1kg",
-  "id_categoria": 2,
-  "precio_costo": 8.50,
-  "precio_venta": 12.00,
-  "stock_minimo": 10,
-  "unidad_medida": "kg"
-}
-```
-
-### 6 — Registrar entrada de inventario
-```http
-POST http://localhost:8000/api/inventario/entrada
-Authorization: Bearer 2|Qkr7...
-Content-Type: application/json
-
-{
-  "id_producto": 1,
-  "id_almacen": 1,
-  "cantidad": 50,
-  "observaciones": "Compra inicial"
-}
-```
-
-### 7 — Registrar salida (genera alerta si llega al mínimo)
-```http
-POST http://localhost:8000/api/inventario/salida
-Authorization: Bearer 2|Qkr7...
-Content-Type: application/json
-
-{
-  "id_producto": 1,
-  "id_almacen": 1,
-  "cantidad": 5
-}
-```
-
-### 8 — Ver alertas
-```http
-GET http://localhost:8000/api/alertas
-Authorization: Bearer 2|Qkr7...
-```
-
-### 9 — Logout
-```http
-POST http://localhost:8000/api/auth/logout
-Authorization: Bearer 2|Qkr7...
-```
+### 7. Historial y Reportes en Excel
+1. Ve a **Movimientos** para ver la bitácora completa de todo lo que acaba de suceder (Entradas, Salidas, quién lo hizo y a qué hora).
+2. Haz clic en el botón **Exportar CSV** para descargar un reporte limpio y listo para abrir en Excel.
 
 ---
 
