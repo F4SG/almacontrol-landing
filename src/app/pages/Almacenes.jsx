@@ -13,10 +13,10 @@ import {
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const stockColor = (cantidad, minimo) => {
   if (cantidad === 0)         return { bg: 'bg-red-500',    border: 'border-red-600',    text: 'text-white', label: 'Sin stock' }
-  if (cantidad <= minimo)     return { bg: 'bg-orange-400', border: 'border-orange-500', text: 'text-white', label: 'Bajo' }
+  if (cantidad <= minimo)     return { bg: 'bg-orange-500', border: 'border-orange-600', text: 'text-white', label: 'Bajo' }
   return                             { bg: 'bg-emerald-500', border: 'border-emerald-600', text: 'text-white', label: 'OK' }
 }
-const emptyColor = { bg: 'bg-gray-100', border: 'border-gray-200', text: 'text-gray-400', label: 'Vacío' }
+const emptyColor = { bg: 'bg-gray-100', border: 'border-gray-300', text: 'text-gray-700', label: 'Vacío' }
 
 // ── Mapa Visual ───────────────────────────────────────────────────────────────
 function MapaVisual({ almacenId, almacenNombre, highlightProductoId }) {
@@ -92,19 +92,19 @@ function MapaVisual({ almacenId, almacenNombre, highlightProductoId }) {
           ) : (
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               {/* Leyenda */}
-              <div className="flex items-center gap-4 px-4 py-3 border-b border-gray-100 bg-gray-50 text-xs">
+              <div className="flex flex-wrap items-center gap-4 px-4 py-3 border-b border-gray-100 bg-gray-50 text-xs">
                 <span className="font-semibold text-gray-500">Leyenda:</span>
-                <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-emerald-500 inline-block" /> Normal</span>
-                <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-orange-400 inline-block" /> Bajo mínimo</span>
-                <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-red-500 inline-block" /> Sin stock</span>
-                <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-gray-100 border border-gray-200 inline-block" /> Vacío</span>
+                <span className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded bg-emerald-500 inline-block" /> Normal</span>
+                <span className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded bg-orange-500 inline-block" /> Bajo mínimo</span>
+                <span className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded bg-red-500 inline-block" /> Sin stock</span>
+                <span className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded bg-gray-100 border border-gray-300 inline-block" /> Vacío</span>
               </div>
 
               {/* Mapa de grilla */}
-              <div className="p-4 overflow-x-auto">
+              <div className="p-4 overflow-x-auto pb-8">
                 <div
-                  className="grid gap-2 w-max min-w-full"
-                  style={{ gridTemplateColumns: `56px repeat(${pasillos.length}, minmax(72px, 1fr))` }}
+                  className="grid gap-3 w-max min-w-full"
+                  style={{ gridTemplateColumns: `64px repeat(${pasillos.length}, minmax(88px, 1fr))` }}
                 >
                   {/* Header: pasillos */}
                   <div />
@@ -127,7 +127,7 @@ function MapaVisual({ almacenId, almacenNombre, highlightProductoId }) {
                         if (!ub) {
                           return (
                             <div key={`${pasillo}-${estante}`}
-                              className="h-16 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center"
+                              className="h-20 rounded-xl bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center"
                             >
                               <span className="text-gray-300 text-xs">—</span>
                             </div>
@@ -148,17 +148,19 @@ function MapaVisual({ almacenId, almacenNombre, highlightProductoId }) {
                           <button
                             key={`${pasillo}-${estante}`}
                             onClick={() => setSelected(isSelected ? null : { pasillo, estante })}
-                            className={`h-16 rounded-xl border-2 flex flex-col items-center justify-center gap-0.5 transition-all duration-200 text-white
-                              ${highlight ? 'ring-4 ring-[#F59E0B] ring-offset-1 scale-105 shadow-lg' : ''}
-                              ${isSelected ? 'ring-2 ring-[#1B4332] ring-offset-1 scale-105 shadow-lg' : 'hover:scale-102 hover:shadow-md'}
-                              ${colors.bg} ${colors.border}`}
+                            className={`h-20 p-2 rounded-xl border-2 flex flex-col items-center justify-center gap-1 transition-all duration-200 relative
+                              ${highlight ? 'ring-4 ring-[#F59E0B] ring-offset-2 scale-105 shadow-xl z-20' : ''}
+                              ${isSelected ? 'ring-2 ring-[#1B4332] ring-offset-2 scale-105 shadow-lg z-20' : 'hover:scale-105 hover:shadow-md hover:z-10'}
+                              ${colors.bg} ${colors.border} ${colors.text}`}
                           >
-                            <MapPin className="w-4 h-4" />
-                            <span className="text-[10px] font-bold">
+                            <MapPin className="w-5 h-5 mb-0.5 opacity-90" />
+                            <span className="text-[11px] leading-none font-bold text-center">
                               P{pasillo} E{estante}
                             </span>
                             {ub.capacidad_max && (
-                              <span className="text-[9px] opacity-75">Cap: {ub.capacidad_max}</span>
+                              <span className="text-[10px] opacity-80 leading-none text-center">
+                                Cap: {ub.capacidad_max}
+                              </span>
                             )}
                           </button>
                         )
