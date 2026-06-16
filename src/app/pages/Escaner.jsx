@@ -115,11 +115,13 @@ export default function Escaner() {
       scannerRef.current = scanner
 
       const config = {
-        fps: 10,
-        qrbox: { width: 260, height: 180 },
+        fps: 30, // Mayor cantidad de frames por segundo para detectar más rápido en movimiento
+        qrbox: { width: 350, height: 150 }, // Rectángulo más ancho, optimizado para códigos de barras
         formatsToSupport: SUPPORTED_FORMATS,
-        aspectRatio: 1.5,
         disableFlip: true, // Evita que la cámara se vea "espejada" (invertida)
+        experimentalFeatures: {
+          useBarCodeDetectorIfSupported: true // Usa aceleración de hardware (API nativa de Chrome/Edge) si está disponible, es 10x más rápido
+        }
       }
 
       const camConfig = cameraId
