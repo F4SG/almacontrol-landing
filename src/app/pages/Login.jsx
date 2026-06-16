@@ -30,7 +30,7 @@ export default function Login() {
       loginUser(data.token, data.user)
       navigate('/dashboard', { replace: true })
     } catch (err) {
-      setError(err?.message || 'Credenciales incorrectas')
+      setError(err?.error || err?.message || 'Credenciales incorrectas')
     } finally {
       setLoading(false)
     }
