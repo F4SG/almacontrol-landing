@@ -69,8 +69,30 @@ class InventarioController extends Controller
 
         // Actualizar lote si aplica
         if (! empty($data['id_lote'])) {
-            Lote::where('id_lote', $data['id_lote'])
-                ->increment('cantidad_actual', $data['cantidad']);
+            $lote = Lote::where('id_lote', $data['id_lote'])->first();
+            if ($lote) {
+                $lote->increment('cantidad_actual', $data['cantidad']);
+
+                // Alerta de vencimiento próximo (≤ 30 días)
+                if ($lote->fecha_vencimiento) {
+                    $diasParaVencer = now()->diffInDays($lote->fecha_vencimiento, false);
+                    if ($diasParaVencer >= 0 && $diasParaVencer <= 30) {
+                        $producto = Producto::find($data['id_producto']);
+                        Alerta::firstOrCreate(
+                            [
+                                'id_producto' => $data['id_producto'],
+                                'id_almacen'  => $data['id_almacen'],
+                                'tipo_alerta' => 'VENCIMIENTO_PROXIMO',
+                                'leida'       => 0,
+                            ],
+                            [
+                                'mensaje'        => "Vencimiento próximo: {$producto?->nombre} vence el {$lote->fecha_vencimiento} ({$diasParaVencer} días restantes)",
+                                'fecha_generada' => now(),
+                            ]
+                        );
+                    }
+                }
+            }
         }
 
         $movimiento->load(['producto', 'almacen', 'usuario']);

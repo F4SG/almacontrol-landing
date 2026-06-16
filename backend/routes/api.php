@@ -10,6 +10,9 @@ use App\Http\Controllers\Api\InventarioController;
 use App\Http\Controllers\Api\OrdenController;
 use App\Http\Controllers\Api\AlertaController;
 use App\Http\Controllers\Api\CategoriaController;
+use App\Http\Controllers\Api\UbicacionController;
+use App\Http\Controllers\Api\ReporteController;
+
 
 // ── Auth (públicas) ──────────────────────────────────────────────────────────
 Route::prefix('auth')->group(function () {
@@ -53,4 +56,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('alertas',                 [AlertaController::class, 'index']);
     Route::put('alertas/leer-todas',      [AlertaController::class, 'leerTodas']);
     Route::put('alertas/{id}/leer',       [AlertaController::class, 'leer']);
+
+    // Ubicaciones del almacén (mapa digital)
+    Route::get('almacenes/{id}/ubicaciones',    [UbicacionController::class, 'index']);
+    Route::post('almacenes/{id}/ubicaciones',   [UbicacionController::class, 'store']);
+    Route::delete('ubicaciones/{id}',           [UbicacionController::class, 'destroy']);
+
+    // Reportes CSV
+    Route::get('reportes/inventario-csv',  [ReporteController::class, 'inventarioCsv']);
+    Route::get('reportes/movimientos-csv', [ReporteController::class, 'movimientosCsv']);
 });
