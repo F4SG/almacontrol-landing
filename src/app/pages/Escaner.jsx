@@ -115,10 +115,13 @@ export default function Escaner() {
       scannerRef.current = scanner
 
       const config = {
-        fps: 20, // Suficientemente rápido pero estable
-        qrbox: { width: 350, height: 200 }, // Rectángulo ancho para códigos de barras
+        fps: 20, 
+        qrbox: { width: 350, height: 200 }, 
         formatsToSupport: SUPPORTED_FORMATS,
-        // Solicita alta resolución opcionalmente (no obliga, evita crash)
+        disableFlip: false, // Permitimos que la librería maneje el flip interno si lo necesita
+        experimentalFeatures: {
+          useBarCodeDetectorIfSupported: true // Extremadamente importante para leer 1D rápido en PC
+        },
         videoConstraints: {
           advanced: [
             { width: 1920, height: 1080 },
