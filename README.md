@@ -102,7 +102,7 @@ El frontend corre en → **http://localhost:5173**
 Dado que estás usando XAMPP, la forma más fácil y visual de ver todos los datos, usuarios, contraseñas y tablas es usando phpMyAdmin:
 
 1. Asegúrate de que **MySQL** y **Apache** estén corriendo en tu panel de XAMPP.
-2. Abre tu navegador y entra a: [http://localhost/phpmyadmin](http://localhost/phpmyadmin)
+2. Abre tu navegador y entra a: [http://localhost/phpmyadmin](http://localhost/phpmyadmin) *(Si tu Apache usa el puerto 8012, entra a [http://localhost:8012/phpmyadmin](http://localhost:8012/phpmyadmin))*
 3. En la barra lateral izquierda, busca y haz clic en la base de datos llamada **`almacontrol`**.
 4. ¡Listo! Ahí verás todas las tablas. Puedes hacer clic en `usuario` para ver las contraseñas encriptadas, o en `producto` para ver tu inventario.
 
