@@ -115,19 +115,15 @@ export default function Escaner() {
       scannerRef.current = scanner
 
       const config = {
-        fps: 30, 
-        // No definimos qrbox para que escanee TODA la pantalla. 
-        // Esto hace que sea 100x más fácil de apuntar.
+        fps: 20, // Suficientemente rápido pero estable
+        qrbox: { width: 350, height: 200 }, // Rectángulo ancho para códigos de barras
         formatsToSupport: SUPPORTED_FORMATS,
-        experimentalFeatures: {
-          useBarCodeDetectorIfSupported: true
-        }
       }
 
-      // Forzar resolución HD (720p) para que los códigos de barras tengan nitidez
+      // Configuración de cámara segura (sin forzar HD que causa crash en algunas webcams)
       const camConfig = cameraId
-        ? { deviceId: { exact: cameraId }, width: { ideal: 1280 }, height: { ideal: 720 } }
-        : { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+        ? { deviceId: { exact: cameraId } }
+        : { facingMode: 'environment' }
 
       try {
         await scanner.start(
