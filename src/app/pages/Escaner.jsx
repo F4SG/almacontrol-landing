@@ -35,7 +35,7 @@ export default function Escaner() {
   const [feedback, setFeedback]   = useState('')
   const [manualCode, setManualCode] = useState('')
   const [showManual, setShowManual] = useState(false)
-  const [facingMode, setFacingMode] = useState('environment')
+  const [cameraId, setCameraId]   = useState(null) // null = trasera
   const [cameras, setCameras]     = useState([])
   const [lastCode, setLastCode]   = useState('')
 
@@ -47,20 +47,18 @@ export default function Escaner() {
     getAlmacenes().then(setAlmacenes).catch(() => {})
   }, [])
 
-  // Buscar cámaras disponibles y determinar si usamos frontal o trasera
+  // Buscar cámaras disponibles y pre-seleccionar la mejor (trasera si existe, sino la primera)
   useEffect(() => {
     Html5Qrcode.getCameras().then(cams => {
       setCameras(cams)
-      const hasBack = cams.some(c => 
-        c.label.toLowerCase().includes('back') || 
-        c.label.toLowerCase().includes('environment') || 
-        c.label.toLowerCase().includes('trasera') || 
-        c.label.toLowerCase().includes('posterior')
-      )
-      if (!hasBack) {
-        setFacingMode('user') // Laptop webcam
-      } else {
-        setFacingMode('environment') // Celular
+      if (cams.length > 0) {
+        const backCam = cams.find(c => 
+          c.label.toLowerCase().includes('back') || 
+          c.label.toLowerCase().includes('environment') || 
+          c.label.toLowerCase().includes('trasera') || 
+          c.label.toLowerCase().includes('posterior')
+        )
+        setCameraId(backCam ? backCam.id : cams[0].id)
       }
     }).catch(() => {})
   }, [])
@@ -112,14 +110,15 @@ export default function Escaner() {
       scannerRef.current = scanner
 
       const config = {
-        fps: 10, // 10 FPS es el estándar más estable para decodificación en JS
-        qrbox: { width: 250, height: 150 }, // Caja pequeña para obligar a enfocar bien
+        fps: 10,
+        qrbox: { width: 250, height: 150 },
         formatsToSupport: SUPPORTED_FORMATS,
-        disableFlip: false, // CRÍTICO: permite a la librería des-espejar el video internamente
       }
 
-      // Usar facingMode es mucho más robusto que deviceId en html5-qrcode
-      const camConfig = { facingMode: facingMode }
+      // Configuración de cámara predeterminada y robusta
+      const camConfig = cameraId
+        ? { deviceId: { exact: cameraId } }
+        : { facingMode: 'environment' }
 
       try {
         await scanner.start(
@@ -138,7 +137,7 @@ export default function Escaner() {
         scannerRef.current = null
       }
     }, 100)
-  }, [facingMode, buscarProducto])
+  }, [cameraId, buscarProducto])
 
   const stopScanner = useCallback(async () => {
     if (scannerRef.current) {
@@ -152,9 +151,10 @@ export default function Escaner() {
 
   const switchCamera = useCallback(async () => {
     await stopScanner()
-    setFacingMode(prev => prev === 'environment' ? 'user' : 'environment')
+    const next = cameras.find(c => c.id !== cameraId)
+    setCameraId(next?.id ?? null)
     setTimeout(() => startScanner(), 300)
-  }, [stopScanner, startScanner])
+  }, [cameras, cameraId, stopScanner, startScanner])
 
   useEffect(() => {
     return () => {
@@ -243,13 +243,6 @@ export default function Escaner() {
         className={`relative overflow-hidden rounded-2xl bg-gray-900 ${isScanning ? 'block' : 'hidden'}`}
         style={{ minHeight: 240 }}
       >
-        {/* Eliminamos el override de transform para que actúe como un espejo natural (más intuitivo) */}
-        <style>{`
-          #qr-reader-viewport video {
-            object-fit: cover !important;
-          }
-        `}</style>
-
         <div id={domId} className="w-full" />
 
         {/* Overlay de mira */}
@@ -262,16 +255,7 @@ export default function Escaner() {
           </div>
         </div>
 
-        {/* Mensaje de autoenfoque */}
-        {isScanning && (
-          <div className="absolute top-4 left-0 right-0 flex justify-center pointer-events-none">
-            <div className="bg-black/70 backdrop-blur-md px-4 py-2 rounded-full border border-gray-600">
-              <p className="text-white text-xs font-bold text-center">
-                ⚠️ Aleja el producto a unos 20cm para que la cámara enfoque
-              </p>
-            </div>
-          </div>
-        )}
+
 
         {/* Botones sobre cámara */}
         <div className="absolute bottom-3 right-3 flex flex-col gap-2">
