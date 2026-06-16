@@ -5,18 +5,19 @@ import { logout } from '../services/api'
 import {
   Package, LayoutDashboard, Boxes, Warehouse,
   TruckIcon, ArrowLeftRight, ShoppingCart, Bell,
-  LogOut, Menu, X, ChevronRight, User,
+  LogOut, Menu, X, ChevronRight, User, Scan
 } from 'lucide-react'
 
 const navItems = [
   { to: '/dashboard',   icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/productos',   icon: Package,          label: 'Productos' },
-  { to: '/inventario',  icon: Boxes,            label: 'Inventario' },
-  { to: '/movimientos', icon: ArrowLeftRight,   label: 'Movimientos' },
-  { to: '/almacenes',   icon: Warehouse,        label: 'Almacenes' },
-  { to: '/proveedores', icon: TruckIcon,        label: 'Proveedores' },
-  { to: '/ordenes',     icon: ShoppingCart,     label: 'Órdenes' },
-  { to: '/alertas',     icon: Bell,             label: 'Alertas' },
+  { to: '/escaner',     icon: Scan,            label: 'Escáner' },
+  { to: '/productos',   icon: Package,         label: 'Productos' },
+  { to: '/inventario',  icon: Boxes,           label: 'Inventario' },
+  { to: '/movimientos', icon: ArrowLeftRight,  label: 'Movimientos' },
+  { to: '/almacenes',   icon: Warehouse,       label: 'Almacenes' },
+  { to: '/proveedores', icon: TruckIcon,       label: 'Proveedores' },
+  { to: '/ordenes',     icon: ShoppingCart,    label: 'Órdenes' },
+  { to: '/alertas',     icon: Bell,            label: 'Alertas' },
 ]
 
 export default function AppLayout({ children }) {

@@ -25,6 +25,7 @@ import Inventario     from './app/pages/Inventario'
 import Movimientos    from './app/pages/Movimientos'
 import Ordenes        from './app/pages/Ordenes'
 import Alertas        from './app/pages/Alertas'
+import Escaner        from './app/pages/Escaner'
 
 function LandingPage() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -75,6 +76,7 @@ export default function App() {
       <Route path="/movimientos"      element={<AppPage><Movimientos /></AppPage>} />
       <Route path="/ordenes"          element={<AppPage><Ordenes /></AppPage>} />
       <Route path="/alertas"          element={<AppPage><Alertas /></AppPage>} />
+      <Route path="/escaner"          element={<AppPage><Escaner /></AppPage>} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />

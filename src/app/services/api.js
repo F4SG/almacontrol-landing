@@ -190,6 +190,9 @@ export const getCategorias = () =>
 export const getUbicaciones = (almacenId) =>
   fetch(`${API_BASE}/almacenes/${almacenId}/ubicaciones`, { headers: authHeaders() }).then(handleResponse)
 
+export const getMapaAlmacen = (almacenId) =>
+  fetch(`${API_BASE}/almacenes/${almacenId}/mapa`, { headers: authHeaders() }).then(handleResponse)
+
 export const createUbicacion = (almacenId, data) =>
   fetch(`${API_BASE}/almacenes/${almacenId}/ubicaciones`, {
     method: 'POST',
@@ -200,6 +203,12 @@ export const createUbicacion = (almacenId, data) =>
 export const deleteUbicacion = (id) =>
   fetch(`${API_BASE}/ubicaciones/${id}`, {
     method: 'DELETE',
+    headers: authHeaders(),
+  }).then(handleResponse)
+
+// ── Búsqueda por código de barras / QR ───────────────────────────────────────
+export const buscarProductoPorCodigo = (codigo) =>
+  fetch(`${API_BASE}/productos/buscar?codigo=${encodeURIComponent(codigo)}`, {
     headers: authHeaders(),
   }).then(handleResponse)
 
