@@ -54,7 +54,7 @@ export default function CaptureForm({ onSuccess }) {
     try {
       const res = await fetch('http://localhost:8000/api/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nombre:     values.name.split(' ')[0],
           apellido:   values.name.split(' ').slice(1).join(' ') || '-',

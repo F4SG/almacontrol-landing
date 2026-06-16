@@ -2,12 +2,20 @@ const API_BASE = 'http://localhost:8000/api'
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 const authHeaders = () => ({
+  Accept: 'application/json',
   'Content-Type': 'application/json',
   Authorization: `Bearer ${localStorage.getItem('almacontrol_token')}`,
 })
 
 const handleResponse = async (res) => {
-  const data = await res.json()
+  const text = await res.text()
+  let data
+  try {
+    data = JSON.parse(text)
+  } catch (err) {
+    // Si no es JSON (ej. página de error HTML), lanzamos un error legible
+    throw new Error(`Error del servidor (${res.status}): La respuesta no es JSON válido.`)
+  }
   if (!res.ok) throw data
   return data
 }
@@ -16,14 +24,14 @@ const handleResponse = async (res) => {
 export const login = (correo, contrasena) =>
   fetch(`${API_BASE}/auth/login`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
     body: JSON.stringify({ correo, contrasena }),
   }).then(handleResponse)
 
 export const register = (data) =>
   fetch(`${API_BASE}/auth/register`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   }).then(handleResponse)
 
