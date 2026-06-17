@@ -25,18 +25,11 @@ class ProductoController extends Controller
     {
         $codigo = trim($request->get('codigo', ''));
 
-        if (!$codigo) {
+        if ($codigo === '') {
             return response()->json(['message' => 'Se requiere el parámetro código'], 422);
         }
 
-        $producto = Producto::with(['categoria', 'proveedor'])
-            ->where('activo', 1)
-            ->where(function ($q) use ($codigo) {
-                $q->where('codigo_barras',  $codigo)
-                  ->orWhere('codigo_qr',    $codigo)
-                  ->orWhere('codigo_interno', $codigo);
-            })
-            ->first();
+        $producto = Producto::buscarPorCodigo($codigo)?->load(['categoria', 'proveedor']);
 
         if (!$producto) {
             return response()->json(['message' => 'Producto no encontrado con ese código'], 404);
