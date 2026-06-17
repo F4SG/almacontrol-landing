@@ -58,6 +58,9 @@ El servidor corre en → **http://localhost:8000**
 
 ### Paso 4 — Arrancar el frontend
 
+> [!WARNING]
+> **Error común:** No ejecutes `npm run dev` ni `vite` en la carpeta del backend. El frontend es un proyecto separado. Debes abrir una **nueva terminal** y navegar a la carpeta del frontend.
+
 ```powershell
 # Terminal 2 — desde c:\AlmaControl\
 npm run dev
