@@ -272,9 +272,8 @@ export default function Escaner() {
                      state === STATES.SUCCESS    || state === STATES.ERROR
 
   return (
-    <div className={isDark ? 'dark' : ''}>
-      <div className="absolute inset-0 bg-gray-50 dark:bg-gray-950 p-6 overflow-y-auto transition-colors duration-300">
-        <div className="max-w-lg mx-auto space-y-4">
+    <div className={`absolute inset-0 ${isDark ? 'dark' : ''} bg-gray-50 dark:bg-gray-950 p-6 overflow-y-auto transition-colors duration-300`}>
+      <div className="max-w-lg mx-auto space-y-4">
 
           {/* Header */}
           <div className="flex items-center justify-between">
@@ -557,7 +556,6 @@ export default function Escaner() {
             </div>
           )}
 
-        </div>
       </div>
     </div>
   )
