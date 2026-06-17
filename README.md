@@ -44,6 +44,7 @@ El proyecto está unificado en un solo repositorio. Al clonarlo, verás esta est
 ### Paso 2 — Importar la base de datos
 
 1. Abrir **http://localhost/phpmyadmin** en el navegador
+   *(Nota: Si tu Apache en XAMPP usa un puerto diferente al 80, por ejemplo 8012, debes entrar a **http://localhost:8012/phpmyadmin**)*
 2. Clic en **Nueva** (panel izquierdo)
 3. Nombre: `almacontrol` → **Crear**
 4. Seleccionar la base `almacontrol` → pestaña **Importar**
