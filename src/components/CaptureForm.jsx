@@ -52,9 +52,12 @@ export default function CaptureForm({ onSuccess }) {
     }
     setSubmitting(true)
     try {
-      const res = await fetch('http://localhost:8000/api/auth/register', {
+      const res = await fetch('http://apialmacontrol.infinityfreeapp.com/api/auth/register', {
         method: 'POST',
-        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify({
           nombre:     values.name.split(' ')[0],
           apellido:   values.name.split(' ').slice(1).join(' ') || '-',

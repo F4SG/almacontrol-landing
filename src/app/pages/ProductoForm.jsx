@@ -4,7 +4,7 @@ import { getProducto, createProducto, updateProducto } from '../services/api'
 import Spinner from '../components/Spinner'
 import { ArrowLeft, Save } from 'lucide-react'
 
-const API_BASE = 'http://localhost:8000/api'
+const API_BASE = 'http://apialmacontrol.infinityfreeapp.com/api'
 const authHeaders = () => ({
   'Content-Type': 'application/json',
   Authorization: `Bearer ${localStorage.getItem('almacontrol_token')}`,
