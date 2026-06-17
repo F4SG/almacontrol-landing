@@ -38,6 +38,7 @@ export default function Escaner() {
   const [lastCode, setLastCode]   = useState('')
 
   const codeReaderRef = useRef(new BrowserMultiFormatReader())
+  const scannerRef = useRef(null)
   const domId      = 'video-preview'
 
   // Cargar almacenes
@@ -101,33 +102,90 @@ export default function Escaner() {
     } catch (e) { console.warn("AudioContext no soportado") }
   }
 
-  const startScanner = useCallback(() => {
+  const startScanner = useCallback(async () => {
     setState(STATES.SCANNING)
     setFeedback('')
 
-    setTimeout(() => {
-      const videoElement = document.getElementById(domId)
-      if (!videoElement) return
-
-      codeReaderRef.current.decodeFromVideoDevice(
-        cameraId,
-        videoElement,
-        (result, err) => {
-          if (result && result.getText()) {
-            playBeep()
-            buscarProducto(normalizarCodigoEscaneo(result.getText()))
-          }
+    try {
+      const constraints = {
+        video: cameraId ? { deviceId: { exact: cameraId } } : { facingMode: 'environment' }
+      }
+      const stream = await navigator.mediaDevices.getUserMedia(constraints)
+      
+      const video = document.getElementById(domId)
+      if (!video) return
+      
+      video.srcObject = stream
+      video.setAttribute('playsinline', 'true')
+      await video.play()
+      
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d', { willReadFrequently: true })
+      
+      let scanning = true
+      // Guardamos la función stop en un ref para poder detenerlo desde fuera
+      scannerRef.current = {
+        stop: () => {
+          scanning = false
+          stream.getTracks().forEach(t => t.stop())
+          video.srcObject = null
         }
-      ).catch(err => {
-        console.error("Scanner Error:", err)
-        setState(STATES.ERROR)
-        setFeedback('Error al iniciar la cámara. Verifica los permisos.')
-      })
-    }, 100)
+      }
+
+      const scanFrame = () => {
+        if (!scanning) return
+        
+        if (video.videoWidth > 0) {
+          canvas.width = video.videoWidth
+          canvas.height = video.videoHeight
+          
+          // 1. Intentar escanear el frame NORMAL
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+          try {
+            const result = codeReaderRef.current.decode(canvas)
+            if (result && result.getText()) {
+              playBeep()
+              scannerRef.current.stop()
+              buscarProducto(normalizarCodigoEscaneo(result.getText()))
+              return
+            }
+          } catch (e) {}
+          
+          // 2. Intentar escanear el frame ESPEJADO (Volteado horizontalmente)
+          ctx.save()
+          ctx.scale(-1, 1)
+          ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height)
+          ctx.restore()
+
+          try {
+            const resultMirrored = codeReaderRef.current.decode(canvas)
+            if (resultMirrored && resultMirrored.getText()) {
+              playBeep()
+              scannerRef.current.stop()
+              buscarProducto(normalizarCodigoEscaneo(resultMirrored.getText()))
+              return
+            }
+          } catch (e) {}
+        }
+        
+        // Repetir el ciclo lo más rápido posible
+        requestAnimationFrame(scanFrame)
+      }
+      
+      scanFrame()
+      
+    } catch (err) {
+      console.error("Scanner Error:", err)
+      setState(STATES.ERROR)
+      setFeedback('Error al iniciar la cámara. Verifica los permisos.')
+    }
   }, [cameraId, buscarProducto])
 
   const stopScanner = useCallback(() => {
-    codeReaderRef.current.reset()
+    if (scannerRef.current) {
+      scannerRef.current.stop()
+      scannerRef.current = null
+    }
     setState(STATES.IDLE)
     setLastCode('')
   }, [])
