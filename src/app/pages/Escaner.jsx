@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { BrowserMultiFormatReader } from '@zxing/library'
+import { 
+  BrowserMultiFormatReader, 
+  HTMLCanvasElementLuminanceSource, 
+  HybridBinarizer, 
+  BinaryBitmap 
+} from '@zxing/library'
 import {
   buscarProductoPorCodigo, getAlmacenes, registrarEntrada, registrarSalida,
 } from '../services/api'
@@ -132,6 +137,13 @@ export default function Escaner() {
         }
       }
 
+      const decodeCanvas = (canvasElement) => {
+        const luminanceSource = new HTMLCanvasElementLuminanceSource(canvasElement)
+        const hybridBinarizer = new HybridBinarizer(luminanceSource)
+        const binaryBitmap = new BinaryBitmap(hybridBinarizer)
+        return codeReaderRef.current.decodeBitmap(binaryBitmap)
+      }
+
       const scanFrame = () => {
         if (!scanning) return
         
@@ -142,7 +154,7 @@ export default function Escaner() {
           // 1. Intentar escanear el frame NORMAL
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
           try {
-            const result = codeReaderRef.current.decode(canvas)
+            const result = decodeCanvas(canvas)
             if (result && result.getText()) {
               playBeep()
               scannerRef.current.stop()
@@ -158,7 +170,7 @@ export default function Escaner() {
           ctx.restore()
 
           try {
-            const resultMirrored = codeReaderRef.current.decode(canvas)
+            const resultMirrored = decodeCanvas(canvas)
             if (resultMirrored && resultMirrored.getText()) {
               playBeep()
               scannerRef.current.stop()
