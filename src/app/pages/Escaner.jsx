@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { Html5Qrcode } from 'html5-qrcode'
+import { BrowserMultiFormatReader } from '@zxing/library'
 import {
   buscarProductoPorCodigo, getAlmacenes, registrarEntrada, registrarSalida,
 } from '../services/api'
@@ -10,10 +10,8 @@ import {
   Keyboard, X,
 } from 'lucide-react'
 
-const SUPPORTED_FORMATS = [
-  'QR_CODE', 'EAN_13', 'EAN_8', 'CODE_128',
-  'CODE_39', 'UPC_A', 'UPC_E', 'ITF', 'CODABAR',
-]
+const normalizarCodigoEscaneo = (codigo) =>
+  codigo.trim().replace(/[\s-]/g, '')
 
 // ── Estado de la sesión de escaneo ───────────────────────────────────────────
 const STATES = {
@@ -39,28 +37,30 @@ export default function Escaner() {
   const [cameras, setCameras]     = useState([])
   const [lastCode, setLastCode]   = useState('')
 
-  const scannerRef = useRef(null)
-  const domId      = 'qr-reader-viewport'
+  const codeReaderRef = useRef(new BrowserMultiFormatReader())
+  const domId      = 'video-preview'
 
   // Cargar almacenes
   useEffect(() => {
     getAlmacenes().then(setAlmacenes).catch(() => {})
   }, [])
 
-  // Buscar cámaras disponibles y pre-seleccionar la mejor (trasera si existe, sino la primera)
+  // Buscar cámaras disponibles usando ZXing
   useEffect(() => {
-    Html5Qrcode.getCameras().then(cams => {
-      setCameras(cams)
-      if (cams.length > 0) {
-        const backCam = cams.find(c => 
-          c.label.toLowerCase().includes('back') || 
-          c.label.toLowerCase().includes('environment') || 
-          c.label.toLowerCase().includes('trasera') || 
-          c.label.toLowerCase().includes('posterior')
-        )
-        setCameraId(backCam ? backCam.id : cams[0].id)
-      }
-    }).catch(() => {})
+    codeReaderRef.current.listVideoInputDevices()
+      .then(cams => {
+        setCameras(cams)
+        if (cams.length > 0) {
+          const backCam = cams.find(c => 
+            c.label.toLowerCase().includes('back') || 
+            c.label.toLowerCase().includes('environment') || 
+            c.label.toLowerCase().includes('trasera') || 
+            c.label.toLowerCase().includes('posterior')
+          )
+          setCameraId(backCam ? backCam.deviceId : cams[0].deviceId)
+        }
+      })
+      .catch(() => {})
   }, [])
 
   const buscarProducto = useCallback(async (codigo) => {
@@ -102,65 +102,46 @@ export default function Escaner() {
   }
 
   const startScanner = useCallback(() => {
-    if (scannerRef.current) return
     setState(STATES.SCANNING)
+    setFeedback('')
 
-    setTimeout(async () => {
-      const scanner = new Html5Qrcode(domId)
-      scannerRef.current = scanner
+    setTimeout(() => {
+      const videoElement = document.getElementById(domId)
+      if (!videoElement) return
 
-      const config = {
-        fps: 10,
-        qrbox: { width: 250, height: 150 },
-        formatsToSupport: SUPPORTED_FORMATS,
-      }
-
-      // Configuración de cámara predeterminada y robusta
-      const camConfig = cameraId
-        ? { deviceId: { exact: cameraId } }
-        : { facingMode: 'environment' }
-
-      try {
-        await scanner.start(
-          camConfig,
-          config,
-          (decodedText) => {
+      codeReaderRef.current.decodeFromVideoDevice(
+        cameraId,
+        videoElement,
+        (result, err) => {
+          if (result && result.getText()) {
             playBeep()
-            buscarProducto(decodedText.trim())
-          },
-          () => {} 
-        )
-      } catch (err) {
+            buscarProducto(normalizarCodigoEscaneo(result.getText()))
+          }
+        }
+      ).catch(err => {
         console.error("Scanner Error:", err)
         setState(STATES.ERROR)
         setFeedback('Error al iniciar la cámara. Verifica los permisos.')
-        scannerRef.current = null
-      }
+      })
     }, 100)
   }, [cameraId, buscarProducto])
 
-  const stopScanner = useCallback(async () => {
-    if (scannerRef.current) {
-      await scannerRef.current.stop().catch(() => {})
-      scannerRef.current.clear()
-      scannerRef.current = null
-    }
+  const stopScanner = useCallback(() => {
+    codeReaderRef.current.reset()
     setState(STATES.IDLE)
     setLastCode('')
   }, [])
 
-  const switchCamera = useCallback(async () => {
-    await stopScanner()
-    const next = cameras.find(c => c.id !== cameraId)
-    setCameraId(next?.id ?? null)
+  const switchCamera = useCallback(() => {
+    stopScanner()
+    const next = cameras.find(c => c.deviceId !== cameraId)
+    setCameraId(next?.deviceId ?? null)
     setTimeout(() => startScanner(), 300)
   }, [cameras, cameraId, stopScanner, startScanner])
 
   useEffect(() => {
     return () => {
-      if (scannerRef.current) {
-        scannerRef.current.stop().catch(() => {})
-      }
+      codeReaderRef.current.reset()
     }
   }, [])
 
@@ -207,7 +188,7 @@ export default function Escaner() {
     e.preventDefault()
     if (manualCode.trim()) {
       setShowManual(false)
-      buscarProducto(manualCode.trim())
+      buscarProducto(normalizarCodigoEscaneo(manualCode))
       setManualCode('')
     }
   }
@@ -243,7 +224,7 @@ export default function Escaner() {
         className={`relative overflow-hidden rounded-2xl bg-gray-900 ${isScanning ? 'block' : 'hidden'}`}
         style={{ minHeight: 240 }}
       >
-        <div id={domId} className="w-full" />
+        <video id={domId} className="w-full h-full object-cover" />
 
         {/* Overlay de mira */}
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
