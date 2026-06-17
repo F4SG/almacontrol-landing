@@ -19,10 +19,17 @@ Sistema de inventario y almacenes para PYME bolivianas.
 
 ## Estructura del proyecto
 
-```
-c:\AlmaControl\           ← Frontend (este repo) — Landing + App interna
-c:\almacontrol-backend\   ← Backend Laravel 12 API
-```
+El proyecto está dividido físicamente en **dos carpetas principales** que trabajan en conjunto:
+
+### 1. `c:\AlmaControl\` (Frontend)
+* **¿Qué es?** Es la cara visual del sistema y la Landing Page publicitaria.
+* **¿Qué contiene?** Todo el código escrito en React (Vite), diseño (Tailwind CSS v4) y la lógica de interfaz de usuario.
+* **¿Cómo arranca?** Ejecutando `npm run dev` desde esta carpeta.
+
+### 2. `c:\almacontrol-backend\` (Backend)
+* **¿Qué es?** Es el cerebro del sistema, la lógica de negocio y la API REST.
+* **¿Qué contiene?** El código escrito en PHP (Laravel 12), las validaciones, reglas de seguridad y la conexión con la base de datos MySQL.
+* **¿Cómo arranca?** Ejecutando `php artisan serve` desde esta carpeta.
 
 ---
 
