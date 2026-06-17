@@ -19,27 +19,27 @@ Sistema de inventario y almacenes para PYME bolivianas.
 
 ## Estructura del proyecto
 
-El proyecto está dividido físicamente en **dos carpetas principales** que trabajan en conjunto:
+El proyecto está unificado en un solo repositorio. Al clonarlo, verás esta estructura:
 
-### 1. `c:\AlmaControl\` (Frontend)
+### 1. Raíz del proyecto (Frontend)
 * **¿Qué es?** Es la cara visual del sistema y la Landing Page publicitaria.
 * **¿Qué contiene?** Todo el código escrito en React (Vite), diseño (Tailwind CSS v4) y la lógica de interfaz de usuario.
-* **¿Cómo arranca?** Ejecutando `npm run dev` desde esta carpeta.
+* **¿Cómo arranca?** Ejecutando `npm run dev` desde la raíz.
 
-### 2. `c:\almacontrol-backend\` (Backend)
+### 2. Carpeta `backend/` (Backend)
 * **¿Qué es?** Es el cerebro del sistema, la lógica de negocio y la API REST.
 * **¿Qué contiene?** El código escrito en PHP (Laravel 12), las validaciones, reglas de seguridad y la conexión con la base de datos MySQL.
-* **¿Cómo arranca?** Ejecutando `php artisan serve` desde esta carpeta.
+* **¿Cómo arranca?** Ejecutando `php artisan serve` desde dentro de la carpeta `backend/`.
 
 ---
 
-## 🚀 INICIO RÁPIDO
+## 🚀 INICIO RÁPIDO PARA CLONAR EL REPO
 
 ### Paso 1 — Iniciar MySQL con XAMPP
 
 1. Abrir **XAMPP Control Panel**
-2. Hacer clic en **Start** junto a **MySQL**
-3. Verificar que el puerto sea **3306**
+2. Hacer clic en **Start** junto a **MySQL** y **Apache**
+3. Verificar que el puerto de MySQL sea **3306**
 
 ### Paso 2 — Importar la base de datos
 
@@ -47,33 +47,34 @@ El proyecto está dividido físicamente en **dos carpetas principales** que trab
 2. Clic en **Nueva** (panel izquierdo)
 3. Nombre: `almacontrol` → **Crear**
 4. Seleccionar la base `almacontrol` → pestaña **Importar**
-5. Elegir el archivo: `c:\AlmaControl\almacontrol (1).sql`
+5. Elegir el archivo: `almacontrol (1).sql` (ubicado en la raíz del proyecto)
 6. Clic en **Importar**
-
-> ✅ La BD incluye los seeds de: roles, categorías y tipos de orden
 
 ### Paso 3 — Configurar y arrancar el backend
 
+Abre una terminal en la carpeta `backend/` del proyecto y ejecuta:
+
 ```powershell
-# Terminal 1 — desde c:\almacontrol-backend\
-php artisan migrate --path=database/migrations/2026_06_16_194426_create_personal_access_tokens_table.php --force
+cd backend
+composer install
+copy .env.example .env
+php artisan key:generate
 php artisan db:seed --class=AdminSeeder
 php artisan serve
 ```
 
-El servidor corre en → **http://localhost:8000**
+El servidor de la API correrá en → **http://localhost:8000**
 
-### Paso 4 — Arrancar el frontend
+### Paso 4 — Configurar y arrancar el frontend
 
-> [!WARNING]
-> **Error común:** No ejecutes `npm run dev` ni `vite` en la carpeta del backend. El frontend es un proyecto separado. Debes abrir una **nueva terminal** y navegar a la carpeta del frontend.
+Abre **otra** terminal en la raíz del proyecto (fuera de la carpeta backend) y ejecuta:
 
 ```powershell
-# Terminal 2 — desde c:\AlmaControl\
+npm install
 npm run dev
 ```
 
-El frontend corre en → **http://localhost:5173**
+El frontend correrá en → **http://localhost:5173**
 
 ---
 
