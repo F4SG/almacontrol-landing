@@ -325,7 +325,7 @@ export default function Escaner() {
 
           {/* Visor de cámara */}
           <div
-            className={`relative overflow-hidden rounded-2xl ${t.camBg} transition-colors duration-300 ${isScanning ? `"block`" : `"hidden`"}`}
+            className={`relative overflow-hidden rounded-2xl ${t.camBg} transition-colors duration-300 ${isScanning ? 'block' : 'hidden'}`}
             style={{ minHeight: 240 }}
           >
             <video id={domId} className="w-full h-full object-cover" />
