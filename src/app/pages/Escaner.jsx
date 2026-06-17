@@ -266,25 +266,48 @@ export default function Escaner() {
 
 
 
+  // ── Tema local ───────────────────────────────────────────────────────────
+  const t = {
+    bg:          isDark ? 'bg-gray-950'           : 'bg-gray-50',
+    card:        isDark ? 'bg-gray-900 border-gray-800'  : 'bg-white border-gray-200',
+    cardInner:   isDark ? 'bg-gray-800 border-gray-700'  : 'bg-gray-100 border-gray-300',
+    title:       isDark ? 'text-white'            : 'text-gray-900',
+    subtitle:    isDark ? 'text-gray-400'         : 'text-gray-500',
+    label:       isDark ? 'text-gray-400'         : 'text-gray-600',
+    muted:       isDark ? 'text-gray-500'         : 'text-gray-400',
+    input:       isDark ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500'  : 'bg-gray-100 border-gray-300 text-gray-900 placeholder-gray-400',
+    select:      isDark ? 'bg-gray-800 border-gray-700 text-white'  : 'bg-gray-50 border-gray-300 text-gray-900',
+    btnAlt:      isDark ? 'bg-gray-800 border-gray-700 text-white hover:bg-gray-700'  : 'bg-gray-200 border-gray-300 text-gray-900 hover:bg-gray-300',
+    btnOutline:  isDark ? 'border-gray-700 text-gray-300 hover:bg-gray-800'  : 'border-gray-300 text-gray-600 hover:bg-gray-100',
+    stockBg:     isDark ? 'bg-gray-900/50'        : 'bg-gray-50',
+    stockBorder: isDark ? 'border-gray-800'       : 'border-gray-200',
+    themeBtn:    isDark ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-gray-200 text-gray-900 hover:bg-gray-300',
+    consejos:    isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200',
+    consejosTitle: isDark ? 'text-orange-400' : 'text-orange-500',
+    consejosText:  isDark ? 'text-gray-400'   : 'text-gray-500',
+    strong:        isDark ? 'text-gray-300'   : 'text-gray-800',
+    camBg:         isDark ? 'bg-gray-900'     : 'bg-gray-200',
+  }
+
   // ── Render ────────────────────────────────────────────────────────────────
   const isScanning = state === STATES.SCANNING || state === STATES.FOUND ||
                      state === STATES.NOTFOUND  || state === STATES.REGISTERING ||
                      state === STATES.SUCCESS    || state === STATES.ERROR
 
   return (
-    <div className={`absolute inset-0 ${isDark ? 'dark' : ''} bg-gray-50 dark:bg-gray-950 p-6 overflow-y-auto transition-colors duration-300`}>
+    <div className={`absolute inset-0 ${t.bg} p-6 overflow-y-auto transition-colors duration-300`}>
       <div className="max-w-lg mx-auto space-y-4">
 
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white transition-colors duration-300">Escáner</h1>
-              <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5 transition-colors duration-300">QR, EAN-13, CODE128 y más</p>
+              <h1 className={`text-2xl font-extrabold ${t.title} transition-colors duration-300`}>Escáner</h1>
+              <p className={`${t.subtitle} text-sm mt-0.5 transition-colors duration-300`}>QR, EAN-13, CODE128 y más</p>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsDark(!isDark)}
-                className="p-2 rounded-xl bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors duration-300"
+                className={`p-2 rounded-xl ${t.themeBtn} transition-colors duration-300`}
                 title="Alternar tema"
               >
                 {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -292,7 +315,7 @@ export default function Escaner() {
               {isScanning && (
                 <button
                   onClick={stopScanner}
-                  className="inline-flex items-center gap-2 px-3 py-2 border-2 border-red-500/30 text-red-500 dark:text-red-400 text-sm font-semibold rounded-xl hover:bg-red-500/10 transition-colors"
+                  className="inline-flex items-center gap-2 px-3 py-2 border-2 border-red-500/30 text-red-400 text-sm font-semibold rounded-xl hover:bg-red-500/10 transition-colors"
                 >
                   <CameraOff className="w-4 h-4" /> Detener
                 </button>
@@ -302,7 +325,7 @@ export default function Escaner() {
 
           {/* Visor de cámara */}
           <div
-            className={`relative overflow-hidden rounded-2xl bg-gray-100 dark:bg-gray-900 transition-colors duration-300 ${isScanning ? 'block' : 'hidden'}`}
+            className={`relative overflow-hidden rounded-2xl ${t.camBg} transition-colors duration-300 ${isScanning ? `"block`" : `"hidden`"}`}
             style={{ minHeight: 240 }}
           >
             <video id={domId} className="w-full h-full object-cover" />
@@ -333,13 +356,13 @@ export default function Escaner() {
             <div className="flex gap-3">
               <button
                 onClick={switchCamera}
-                className="flex-1 py-3 bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors duration-300"
+                className={`flex-1 py-3 ${t.btnAlt} border font-bold rounded-xl flex items-center justify-center gap-2 transition-colors duration-300`}
               >
                 <RotateCcw className="w-5 h-5" /> Cambiar cámara
               </button>
               <button
                 onClick={() => { stopScanner(); setShowManual(true) }}
-                className="flex-1 py-3 bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors duration-300"
+                className={`flex-1 py-3 ${t.btnAlt} border font-bold rounded-xl flex items-center justify-center gap-2 transition-colors duration-300`}
               >
                 <Keyboard className="w-5 h-5" /> Manual
               </button>
@@ -348,13 +371,13 @@ export default function Escaner() {
 
           {/* Panel IDLE - botón inicial */}
           {state === STATES.IDLE && !showManual && (
-            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-8 text-center space-y-5 transition-colors duration-300">
+            <div className={`${t.card} rounded-2xl shadow-lg border p-8 text-center space-y-5 transition-colors duration-300`}>
               <div className="w-20 h-20 bg-[#F59E0B]/10 rounded-2xl flex items-center justify-center mx-auto">
                 <Scan className="w-10 h-10 text-[#F59E0B]" />
               </div>
               <div>
-                <p className="font-bold text-gray-900 dark:text-white text-lg transition-colors duration-300">Escáner de productos</p>
-                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 transition-colors duration-300">
+                <p className={`font-bold ${t.title} text-lg transition-colors duration-300`}>Escáner de productos</p>
+                <p className={`${t.subtitle} text-sm mt-1 transition-colors duration-300`}>
                   Activa la cámara para escanear códigos QR o de barras y registrar movimientos sin teclado
                 </p>
               </div>
@@ -366,7 +389,7 @@ export default function Escaner() {
               </button>
               <button
                 onClick={() => setShowManual(true)}
-                className="w-full flex items-center justify-center gap-2 py-3 border-2 border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-semibold text-sm rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-300"
+                className={`w-full flex items-center justify-center gap-2 py-3 border-2 ${t.btnOutline} font-semibold text-sm rounded-2xl transition-colors duration-300`}
               >
                 <Keyboard className="w-4 h-4" /> Ingresar código manualmente
               </button>
@@ -375,10 +398,10 @@ export default function Escaner() {
 
           {/* Entrada manual */}
           {showManual && (
-            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-6 transition-colors duration-300">
+            <div className={`${t.card} rounded-2xl shadow-lg border p-6 transition-colors duration-300`}>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-gray-900 dark:text-white transition-colors duration-300">Ingreso Manual</h3>
-                <button onClick={() => setShowManual(false)} className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                <h3 className={`font-bold ${t.title} transition-colors duration-300`}>Ingreso Manual</h3>
+                <button onClick={() => setShowManual(false)} className={`${t.subtitle} hover:${t.title} transition-colors`}>
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -389,7 +412,7 @@ export default function Escaner() {
                   placeholder="Ej: 7771609001448"
                   value={manualCode}
                   onChange={e => setManualCode(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-100 dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-[#F59E0B] transition-colors duration-300"
+                  className={`w-full px-4 py-3 ${t.input} border-2 rounded-xl focus:outline-none focus:border-[#F59E0B] transition-colors duration-300`}
                 />
                 <button type="submit" className="w-full py-3 bg-[#F59E0B] text-gray-900 font-bold rounded-xl hover:bg-[#D97706] transition-colors">
                   Buscar Código
@@ -400,13 +423,13 @@ export default function Escaner() {
 
           {/* Panel NO ENCONTRADO */}
           {state === STATES.NOTFOUND && (
-            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-6 text-center space-y-4 transition-colors duration-300">
+            <div className={`${t.card} rounded-2xl shadow-lg border p-6 text-center space-y-4 transition-colors duration-300`}>
               <div className="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mx-auto">
                 <Package className="w-7 h-7 text-orange-500" />
               </div>
-              <p className="font-bold text-gray-900 dark:text-white transition-colors duration-300">Producto no encontrado</p>
-              <p className="text-gray-500 dark:text-gray-400 text-sm break-all transition-colors duration-300">{feedback}</p>
-              <button onClick={reset} className="w-full py-3 bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white font-bold rounded-xl hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors duration-300">
+              <p className={`font-bold ${t.title} transition-colors duration-300`}>Producto no encontrado</p>
+              <p className={`${t.subtitle} text-sm break-all transition-colors duration-300`}>{feedback}</p>
+              <button onClick={reset} className={`w-full py-3 ${t.btnAlt} border font-bold rounded-xl transition-colors duration-300`}>
                 Escanear otro
               </button>
             </div>
@@ -414,13 +437,13 @@ export default function Escaner() {
 
           {/* Panel ERROR */}
           {state === STATES.ERROR && (
-            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-6 text-center space-y-4 transition-colors duration-300">
+            <div className={`${t.card} rounded-2xl shadow-lg border p-6 text-center space-y-4 transition-colors duration-300`}>
               <div className="w-14 h-14 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto">
                 <AlertTriangle className="w-7 h-7 text-red-500" />
               </div>
-              <p className="font-bold text-gray-900 dark:text-white transition-colors duration-300">Error</p>
-              <p className="text-gray-500 dark:text-gray-400 text-sm transition-colors duration-300">{feedback}</p>
-              <button onClick={reset} className="w-full py-3 bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white font-bold rounded-xl hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors duration-300">
+              <p className={`font-bold ${t.title} transition-colors duration-300`}>Error</p>
+              <p className={`${t.subtitle} text-sm transition-colors duration-300`}>{feedback}</p>
+              <button onClick={reset} className={`w-full py-3 ${t.btnAlt} border font-bold rounded-xl transition-colors duration-300`}>
                 Reintentar
               </button>
             </div>
@@ -428,18 +451,18 @@ export default function Escaner() {
 
           {/* Panel SUCCESS */}
           {state === STATES.SUCCESS && (
-            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-6 text-center space-y-3 transition-colors duration-300">
+            <div className={`${t.card} rounded-2xl shadow-lg border p-6 text-center space-y-3 transition-colors duration-300`}>
               <div className="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center mx-auto">
                 <CheckCircle className="w-7 h-7 text-emerald-500" />
               </div>
-              <p className="font-bold text-gray-900 dark:text-white text-lg transition-colors duration-300">{feedback}</p>
-              <p className="text-gray-500 dark:text-gray-400 text-sm transition-colors duration-300">Volviendo al escáner...</p>
+              <p className={`font-bold ${t.title} text-lg transition-colors duration-300`}>{feedback}</p>
+              <p className={`${t.subtitle} text-sm transition-colors duration-300`}>Volviendo al escáner...</p>
             </div>
           )}
 
           {/* Panel PRODUCTO ENCONTRADO */}
           {state === STATES.FOUND && producto && (
-            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 overflow-hidden transition-colors duration-300">
+            <div className={`${t.card} rounded-2xl shadow-lg border overflow-hidden transition-colors duration-300`}>
               {/* Cabecera del producto */}
               <div className="bg-[#F59E0B] px-5 py-4 flex items-center gap-4">
                 <div className="w-12 h-12 bg-black/20 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -455,7 +478,7 @@ export default function Escaner() {
               </div>
 
               {/* Stock por almacén */}
-              <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 transition-colors duration-300">
+              <div className={`px-5 py-4 border-b ${t.stockBorder} ${t.stockBg} transition-colors duration-300`}>
                 <p className="text-xs font-bold text-gray-500 uppercase mb-2">Stock actual</p>
                 {stockInfo.length === 0 ? (
                   <p className="text-gray-500 text-sm">Sin stock registrado</p>
@@ -463,9 +486,11 @@ export default function Escaner() {
                   <div className="flex flex-wrap gap-2">
                     {stockInfo.map((s, i) => (
                       <span key={i} className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border ${
-                        s.cantidad === 0 ? 'bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-500/20' :
-                        s.cantidad <= (producto.stock_minimo ?? 0) ? 'bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-500/20' :
-                        'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20'
+                        s.cantidad === 0
+                          ? (isDark ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-red-50 text-red-600 border-red-200')
+                          : s.cantidad <= (producto.stock_minimo ?? 0)
+                            ? (isDark ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' : 'bg-orange-50 text-orange-600 border-orange-200')
+                            : (isDark ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-50 text-emerald-600 border-emerald-200')
                       }`}>
                         {s.almacen}: {s.cantidad} {producto.unidad_medida ?? 'unid.'}
                       </span>
@@ -475,14 +500,14 @@ export default function Escaner() {
               </div>
 
               {/* Formulario de movimiento */}
-              <div className="px-5 py-4 space-y-4 bg-white dark:bg-gray-900 transition-colors duration-300">
+              <div className={`px-5 py-4 space-y-4 ${isDark ? 'bg-gray-900' : 'bg-white'} transition-colors duration-300`}>
                 <p className="text-xs font-bold text-gray-500 uppercase">Registrar movimiento</p>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5">Almacén *</label>
+                  <label className={`block text-sm font-semibold ${t.label} mb-1.5`}>Almacén *</label>
                   <select
                     value={form.id_almacen}
                     onChange={e => setForm(p => ({ ...p, id_almacen: e.target.value }))}
-                    className="w-full px-3 py-3 border-2 border-gray-300 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:border-[#F59E0B] bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-300"
+                    className={`w-full px-3 py-3 border-2 ${t.select} rounded-xl text-sm focus:outline-none focus:border-[#F59E0B] transition-colors duration-300`}
                   >
                     <option value="">Seleccionar almacén...</option>
                     {almacenes.map(a => (
@@ -496,23 +521,23 @@ export default function Escaner() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5">Cantidad *</label>
+                  <label className={`block text-sm font-semibold ${t.label} mb-1.5`}>Cantidad *</label>
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
                       onClick={() => setForm(p => ({ ...p, cantidad: Math.max(1, p.cantidad - 1) }))}
-                      className="w-12 h-12 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-700 rounded-xl text-xl font-bold text-gray-900 dark:text-gray-300 flex items-center justify-center transition-colors duration-300"
+                      className={`w-12 h-12 ${t.btnAlt} border rounded-xl text-xl font-bold flex items-center justify-center transition-colors duration-300`}
                     >−</button>
                     <input
                       type="number" min="1"
                       value={form.cantidad}
                       onChange={e => setForm(p => ({ ...p, cantidad: Math.max(1, parseInt(e.target.value) || 1) }))}
-                      className="flex-1 text-center text-2xl font-extrabold py-2.5 border-2 border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:border-[#F59E0B] transition-colors duration-300"
+                      className={`flex-1 text-center text-2xl font-extrabold py-2.5 border-2 ${t.select} rounded-xl focus:outline-none focus:border-[#F59E0B] transition-colors duration-300`}
                     />
                     <button
                       type="button"
                       onClick={() => setForm(p => ({ ...p, cantidad: p.cantidad + 1 }))}
-                      className="w-12 h-12 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-700 rounded-xl text-xl font-bold text-gray-900 dark:text-gray-300 flex items-center justify-center transition-colors duration-300"
+                      className={`w-12 h-12 ${t.btnAlt} border rounded-xl text-xl font-bold flex items-center justify-center transition-colors duration-300`}
                     >+</button>
                   </div>
                 </div>
@@ -537,20 +562,20 @@ export default function Escaner() {
 
           {/* Panel REGISTRANDO */}
           {state === STATES.REGISTERING && (
-            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-8 text-center transition-colors duration-300">
+            <div className={`${t.card} rounded-2xl shadow-lg border p-8 text-center transition-colors duration-300`}>
               <Spinner size="lg" />
-              <p className="text-gray-500 dark:text-gray-400 font-medium mt-4 transition-colors duration-300">Registrando movimiento...</p>
+              <p className={`${t.subtitle} font-medium mt-4 transition-colors duration-300`}>Registrando movimiento...</p>
             </div>
           )}
 
           {/* Información de ayuda */}
           {state === STATES.IDLE && (
-            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 transition-colors duration-300">
-              <p className="text-orange-500 dark:text-orange-400 text-sm font-semibold mb-2">💡 Consejos de uso</p>
-              <ul className="text-gray-500 dark:text-gray-400 text-xs space-y-1">
+            <div className={`${t.consejos} border rounded-2xl p-4 transition-colors duration-300`}>
+              <p className={`${t.consejosTitle} text-sm font-semibold mb-2`}>💡 Consejos de uso</p>
+              <ul className={`${t.consejosText} text-xs space-y-1`}>
                 <li>• Usa la cámara trasera del celular para mejor lectura</li>
                 <li>• Soporta: QR, EAN-13, CODE-128, UPC-A, CODE-39</li>
-                <li>• Asegúrate de que los productos tengan código de barras en <strong className="text-gray-800 dark:text-gray-300">Productos → Editar</strong></li>
+                <li>• Asegúrate de que los productos tengan código de barras en <strong className={t.strong}>Productos → Editar</strong></li>
                 <li>• Si no tienes cámara, usa el botón "Ingresar código manualmente"</li>
               </ul>
             </div>
@@ -560,4 +585,5 @@ export default function Escaner() {
     </div>
   )
 }
+
 
