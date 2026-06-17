@@ -349,28 +349,31 @@ export default function Escaner() {
       </div>
 
       {/* Botón inicial */}
-      {state === STATES.IDLE && (
-        <div className="bg-gray-900 rounded-2xl shadow-lg border border-gray-800 p-8 text-center space-y-5">
+      {state === STATES.IDLE && !showManual && (
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-8 text-center space-y-5 transition-colors duration-300">
           <div className="w-20 h-20 bg-[#F59E0B]/10 rounded-2xl flex items-center justify-center mx-auto">
             <Scan className="w-10 h-10 text-[#F59E0B]" />
           </div>
           <div>
-            <p className="font-bold text-white text-lg">Escáner de productos</p>
-            <p className="text-gray-400 text-sm mt-1">
-              Activa la cámara para escanear códigos QR o de barras      {/* Botón para abrir el escáner si está detenido y no es entrada manual */}
-      {state === STATES.IDLE && !showManual && (
-        <button
-          onClick={startScanner}
-          className="w-full py-4 bg-[#F59E0B] text-gray-900 font-extrabold text-lg rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 hover:bg-[#D97706] transition-colors"
-        >
-          <Scan className="w-6 h-6" /> Iniciar Escáner
-        </button>
-      )}    <button
+            <p className="font-bold text-gray-900 dark:text-white text-lg transition-colors duration-300">Escáner de productos</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 transition-colors duration-300">
+              Activa la cámara para escanear códigos QR o de barras y registrar movimientos sin teclado
+            </p>
+          </div>
+          <button
+            onClick={startScanner}
+            className="w-full flex items-center justify-center gap-3 py-4 bg-[#F59E0B] text-gray-900 font-bold text-base rounded-2xl hover:bg-[#d98b09] transition-colors shadow-md"
+          >
+            <Camera className="w-5 h-5" /> Activar cámara
+          </button>
+          <button
             onClick={() => setShowManual(true)}
-            className="w-full flex items-center justify-center gap-2 py-3 border-2 border-gray-700 text-gray-300 font-semibold text-sm rounded-2xl hover:bg-gray-800 transition-colors"
+            className="w-full flex items-center justify-center gap-2 py-3 border-2 border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-semibold text-sm rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-300"
           >
             <Keyboard className="w-4 h-4" /> Ingresar código manualmente
           </button>
+        </div>
+      )}
               {/* Entrada manual */}
       {showManual && (
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-6 transition-colors duration-300">
