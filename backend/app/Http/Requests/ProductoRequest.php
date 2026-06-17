@@ -12,6 +12,21 @@ class ProductoRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation()
+    {
+        $merge = [];
+        if ($this->has('codigo_barras') && $this->codigo_barras) {
+            $merge['codigo_barras'] = Producto::normalizarCodigo($this->codigo_barras);
+        }
+        if ($this->has('codigo_interno') && $this->codigo_interno) {
+            $merge['codigo_interno'] = Producto::normalizarCodigo($this->codigo_interno);
+        }
+        
+        if (!empty($merge)) {
+            $this->merge($merge);
+        }
+    }
+
     public function rules(): array
     {
         $id = $this->route('producto'); // id del producto en update

@@ -25,10 +25,11 @@ class ProductoController extends Controller
     {
         $codigo = trim($request->get('codigo', ''));
 
-        if ($codigo === '') {
+        if (!$codigo) {
             return response()->json(['message' => 'Se requiere el parámetro código'], 422);
         }
 
+        // Usamos la búsqueda avanzada del modelo para ignorar espacios/guiones
         $producto = Producto::buscarPorCodigo($codigo)?->load(['categoria', 'proveedor']);
 
         if (!$producto) {
