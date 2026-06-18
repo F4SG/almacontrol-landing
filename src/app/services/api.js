@@ -1,4 +1,4 @@
-const API_BASE = 'http://apialmacontrol.infinityfreeapp.com/api'
+const API_BASE = '/api'
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 const authHeaders = () => ({

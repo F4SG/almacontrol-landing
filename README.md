@@ -294,3 +294,24 @@ app/
 - [x] Navbar con botones Login/Registrarse
 - [x] CORS configurado para localhost:5173
 - [x] Cero datos hardcodeados — todo desde la BD
+
+---
+
+## ☁️ Despliegue en la Nube (Producción)
+
+El proyecto completo (Frontend React y Backend Laravel unificados) fue desplegado exitosamente utilizando los siguientes servicios y herramientas:
+
+### Tecnologías Usadas
+1. **GoDaddy**: Se utilizó para la búsqueda y compra del nombre de dominio principal (`almacontrol.shop`). Desde su panel DNS se configuraron los **Nameservers** hacia el hosting.
+2. **Namecheap (Plan Stellar - Shared Hosting)**: Se utilizó como servidor web principal gracias a su facilidad de uso y bajo costo. Aloja el código unificado de Laravel y React.
+3. **cPanel - Administrador de Archivos (File Manager)**: Se utilizó para evitar el uso de clientes FTP (como WinSCP). A través del Administrador de Archivos de cPanel, se subió un archivo `.zip` con el proyecto completo a la carpeta `public_html` y se extrajo directamente en el servidor.
+4. **cPanel - Bases de Datos MySQL (MySQL Databases)**: Herramienta utilizada para crear la base de datos de producción (ej. `almakchh_almacontrol`) y asignar un usuario administrador con todos los privilegios.
+5. **cPanel - phpMyAdmin**: Utilizado para realizar la importación final del archivo `.sql` de la estructura de la base de datos a la nube.
+
+### ¿Cómo ver los cambios en la base de datos de la nube?
+Si necesitas revisar, editar o eliminar registros directamente en la base de datos de producción (ej. revisar usuarios o cambiar contraseñas), sigue estos pasos:
+1. Inicia sesión en tu cuenta de **Namecheap** y ve al **Dashboard**.
+2. Haz clic en el botón naranja que dice **"MANAGE"** al lado de tu plan de hosting.
+3. Haz clic en el botón **"Go to cPanel"**.
+4. Dentro del panel de cPanel, busca la sección "Bases de datos" y haz clic en la herramienta **"phpMyAdmin"**.
+5. En la columna de la izquierda, verás tu base de datos (con un prefijo como `almakchh_almacontrol`). Haz clic en ella y verás todas las tablas de tu sistema en la nube, ¡exactamente igual que en tu entorno local!
