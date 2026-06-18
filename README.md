@@ -5,82 +5,16 @@ Sistema de inventario y almacenes para PYME bolivianas.
 
 ---
 
-## Requisitos previos
+## 🌐 Accesos en Producción (Nube)
 
-| Herramienta | Versión mínima | Descarga |
-|---|---|---|
-| PHP | 8.2 | Incluido en XAMPP |
-| MySQL / MariaDB | 10.4+ | Incluido en XAMPP |
-| Composer | 2.x | [getcomposer.org](https://getcomposer.org) |
-| Node.js | 18+ | [nodejs.org](https://nodejs.org) |
-| XAMPP | 3.x | [apachefriends.org](https://www.apachefriends.org) |
+El sistema se encuentra desplegado en la nube y listo para su uso. No es necesario configurarlo localmente para probarlo.
 
----
+| Recurso | URL |
+|---|---|
+| Landing Page / Frontend | [https://almacontrol.shop](https://almacontrol.shop) |
+| API REST / Backend | [https://api.almacontrol.shop/api](https://api.almacontrol.shop/api) |
 
-## Estructura del proyecto
-
-El proyecto está unificado en un solo repositorio. Al clonarlo, verás esta estructura:
-
-### 1. Raíz del proyecto (Frontend)
-* **¿Qué es?** Es la cara visual del sistema y la Landing Page publicitaria.
-* **¿Qué contiene?** Todo el código escrito en React (Vite), diseño (Tailwind CSS v4) y la lógica de interfaz de usuario.
-* **¿Cómo arranca?** Ejecutando `npm run dev` desde la raíz.
-
-### 2. Carpeta `backend/` (Backend)
-* **¿Qué es?** Es el cerebro del sistema, la lógica de negocio y la API REST.
-* **¿Qué contiene?** El código escrito en PHP (Laravel 12), las validaciones, reglas de seguridad y la conexión con la base de datos MySQL.
-* **¿Cómo arranca?** Ejecutando `php artisan serve` desde dentro de la carpeta `backend/`.
-
----
-
-## 🚀 INICIO RÁPIDO PARA CLONAR EL REPO
-
-### Paso 1 — Iniciar MySQL con XAMPP
-
-1. Abrir **XAMPP Control Panel**
-2. Hacer clic en **Start** junto a **MySQL** y **Apache**
-3. Verificar que el puerto de MySQL sea **3306**
-
-### Paso 2 — Importar la base de datos
-
-1. Abrir **http://localhost/phpmyadmin** en el navegador
-   *(Nota: Si tu Apache en XAMPP usa un puerto diferente al 80, por ejemplo 8012, debes entrar a **http://localhost:8012/phpmyadmin**)*
-2. Clic en **Nueva** (panel izquierdo)
-3. Nombre: `almacontrol` → **Crear**
-4. Seleccionar la base `almacontrol` → pestaña **Importar**
-5. Elegir el archivo: `almacontrol (1).sql` (ubicado en la raíz del proyecto)
-6. Clic en **Importar**
-
-### Paso 3 — Configurar y arrancar el backend
-
-Abre una terminal en la carpeta `backend/` del proyecto y ejecuta:
-
-```powershell
-cd backend
-composer install
-copy .env.example .env
-php artisan key:generate
-php artisan db:seed --class=AdminSeeder
-php artisan serve
-```
-
-El servidor de la API correrá en → **http://localhost:8000**
-
-### Paso 4 — Configurar y arrancar el frontend
-
-Abre **otra** terminal en la raíz del proyecto (fuera de la carpeta backend) y ejecuta:
-
-```powershell
-npm install
-npm run dev
-```
-
-El frontend correrá en → **http://localhost:5173**
-
----
-
-## 🔐 Credenciales de prueba
-
+### 🔐 Credenciales de Administrador (Producción)
 | Campo | Valor |
 |---|---|
 | Correo | `admin@almacontrol.bo` |
@@ -89,21 +23,49 @@ El frontend correrá en → **http://localhost:5173**
 
 ---
 
-## 🌐 URLs del sistema
+## ☁️ Tecnologías de Despliegue
 
-| URL | Descripción |
+El proyecto completo (Frontend React y Backend Laravel unificados) fue desplegado exitosamente utilizando:
+
+1. **GoDaddy**: Proveedor del dominio principal (`almacontrol.shop`).
+2. **Namecheap (Plan Stellar - Shared Hosting)**: Servidor web principal que aloja el código unificado de Laravel y React.
+3. **cPanel - Administrador de Archivos**: Se utilizó para subir un archivo `.zip` con el proyecto a la carpeta `public_html`.
+4. **cPanel - Bases de Datos MySQL**: Para la base de datos de producción (`almakchh_almacontrol`).
+5. **cPanel - phpMyAdmin**: Para la importación del archivo `.sql` de la estructura de la base de datos a la nube.
+
+---
+
+## 💻 Entorno de Desarrollo Local (Secundario)
+
+Si deseas trabajar en el código de manera local, los requisitos y pasos son los siguientes:
+
+| Herramienta | Versión mínima |
 |---|---|
-| http://localhost:5173 | Landing page |
-| http://localhost:5173/login | Iniciar sesión |
-| http://localhost:5173/register | Registrar nueva cuenta |
-| http://localhost:5173/dashboard | Panel principal (requiere login) |
-| http://localhost:5173/productos | Gestión de productos |
-| http://localhost:5173/inventario | Entradas y salidas de stock |
-| http://localhost:5173/movimientos | Historial de movimientos |
-| http://localhost:5173/almacenes | Gestión de almacenes |
-| http://localhost:5173/ordenes | Órdenes de compra/venta |
-| http://localhost:5173/alertas | Alertas de stock |
-| http://localhost:8000/api | API REST base |
+| PHP | 8.2 |
+| MySQL / MariaDB | 10.4+ |
+| Composer | 2.x |
+| Node.js | 18+ |
+
+### Estructura del proyecto
+* **Raíz del proyecto (Frontend):** Código en React (Vite) y Tailwind CSS. Se arranca con `npm run dev`.
+* **Carpeta `backend/` (Backend):** Código en PHP (Laravel 12). Se arranca con `php artisan serve` dentro de la carpeta.
+
+### Iniciar servidor local
+1. Inicia MySQL en XAMPP.
+2. Crea la base de datos `almacontrol` en phpMyAdmin local e importa `almacontrol (1).sql`.
+3. Arranca el backend en una terminal dentro de `backend/`:
+   ```powershell
+   composer install
+   copy .env.example .env
+   php artisan key:generate
+   php artisan db:seed --class=AdminSeeder
+   php artisan serve
+   ```
+4. Arranca el frontend en otra terminal en la raíz:
+   ```powershell
+   npm install
+   npm run dev
+   ```
 
 ---
 
@@ -297,21 +259,4 @@ app/
 
 ---
 
-## ☁️ Despliegue en la Nube (Producción)
 
-El proyecto completo (Frontend React y Backend Laravel unificados) fue desplegado exitosamente utilizando los siguientes servicios y herramientas:
-
-### Tecnologías Usadas
-1. **GoDaddy**: Se utilizó para la búsqueda y compra del nombre de dominio principal (`almacontrol.shop`). Desde su panel DNS se configuraron los **Nameservers** hacia el hosting.
-2. **Namecheap (Plan Stellar - Shared Hosting)**: Se utilizó como servidor web principal gracias a su facilidad de uso y bajo costo. Aloja el código unificado de Laravel y React.
-3. **cPanel - Administrador de Archivos (File Manager)**: Se utilizó para evitar el uso de clientes FTP (como WinSCP). A través del Administrador de Archivos de cPanel, se subió un archivo `.zip` con el proyecto completo a la carpeta `public_html` y se extrajo directamente en el servidor.
-4. **cPanel - Bases de Datos MySQL (MySQL Databases)**: Herramienta utilizada para crear la base de datos de producción (ej. `almakchh_almacontrol`) y asignar un usuario administrador con todos los privilegios.
-5. **cPanel - phpMyAdmin**: Utilizado para realizar la importación final del archivo `.sql` de la estructura de la base de datos a la nube.
-
-### ¿Cómo ver los cambios en la base de datos de la nube?
-Si necesitas revisar, editar o eliminar registros directamente en la base de datos de producción (ej. revisar usuarios o cambiar contraseñas), sigue estos pasos:
-1. Inicia sesión en tu cuenta de **Namecheap** y ve al **Dashboard**.
-2. Haz clic en el botón naranja que dice **"MANAGE"** al lado de tu plan de hosting.
-3. Haz clic en el botón **"Go to cPanel"**.
-4. Dentro del panel de cPanel, busca la sección "Bases de datos" y haz clic en la herramienta **"phpMyAdmin"**.
-5. En la columna de la izquierda, verás tu base de datos (con un prefijo como `almakchh_almacontrol`). Haz clic en ella y verás todas las tablas de tu sistema en la nube, ¡exactamente igual que en tu entorno local!
