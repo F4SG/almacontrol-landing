@@ -52,7 +52,7 @@ export default function CaptureForm({ onSuccess }) {
     }
     setSubmitting(true)
     try {
-      const res = await fetch('http://apialmacontrol.infinityfreeapp.com/api/auth/register', {
+      const res = await fetch('https://api.almacontrol.shop/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

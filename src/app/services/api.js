@@ -1,4 +1,4 @@
-const API_BASE = '/api'
+const API_BASE = 'https://api.almacontrol.shop/api'
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 const authHeaders = () => ({
