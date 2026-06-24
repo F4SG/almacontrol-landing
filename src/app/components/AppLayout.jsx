@@ -8,18 +8,6 @@ import {
   LogOut, Menu, X, ChevronRight, User, Scan
 } from 'lucide-react'
 
-const navItems = [
-  { to: '/dashboard',   icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/escaner',     icon: Scan,            label: 'Escáner' },
-  { to: '/productos',   icon: Package,         label: 'Productos' },
-  { to: '/inventario',  icon: Boxes,           label: 'Inventario' },
-  { to: '/movimientos', icon: ArrowLeftRight,  label: 'Movimientos' },
-  { to: '/almacenes',   icon: Warehouse,       label: 'Almacenes' },
-  { to: '/proveedores', icon: TruckIcon,       label: 'Proveedores' },
-  { to: '/ordenes',     icon: ShoppingCart,    label: 'Órdenes' },
-  { to: '/alertas',     icon: Bell,            label: 'Alertas' },
-]
-
 export default function AppLayout({ children }) {
   const { user, logoutUser } = useAuth()
   const navigate = useNavigate()
@@ -30,6 +18,28 @@ export default function AppLayout({ children }) {
     try { await logout() } catch {}
     logoutUser()
     navigate('/login')
+  }
+
+  const getNavItems = () => {
+    const items = [
+      { to: '/dashboard',   icon: LayoutDashboard, label: 'Dashboard',   roles: [1, 2, 3] },
+      { to: '/escaner',     icon: Scan,            label: 'Escáner',     roles: [1, 2] },
+      { to: '/productos',   icon: Package,         label: 'Productos',   roles: [1, 2, 3] },
+      { to: '/inventario',  icon: Boxes,           label: 'Inventario',  roles: [1, 2, 3] },
+      { to: '/movimientos', icon: ArrowLeftRight,  label: 'Movimientos', roles: [1, 2] },
+      { to: '/almacenes',   icon: Warehouse,       label: 'Almacenes',   roles: [1] },
+      { to: '/proveedores', icon: TruckIcon,       label: 'Proveedores', roles: [1] },
+      { to: '/ordenes',     icon: ShoppingCart,    label: 'Órdenes',     roles: [1, 2] },
+      { to: '/alertas',     icon: Bell,            label: 'Alertas',     roles: [1, 2] },
+      { to: '/personal',    icon: User,            label: 'Personal',    roles: [1] },
+    ]
+
+    // Si el usuario es el super admin, agregar la opción Leads
+    if (user?.correo === 'admin@almacontrol.bo') {
+      items.push({ to: '/leads', icon: LayoutDashboard, label: 'Aprobar Leads', roles: [1] })
+    }
+
+    return items.filter(item => item.roles.includes(user?.rol?.id_rol))
   }
 
   const SidebarContent = () => (
@@ -47,7 +57,7 @@ export default function AppLayout({ children }) {
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navItems.map(({ to, icon: Icon, label }) => (
+        {getNavItems().map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
             to={to}

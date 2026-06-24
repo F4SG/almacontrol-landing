@@ -27,6 +27,8 @@ import Movimientos    from './app/pages/Movimientos'
 import Ordenes        from './app/pages/Ordenes'
 import Alertas        from './app/pages/Alertas'
 import Escaner        from './app/pages/Escaner'
+import PersonalList   from './app/pages/Personal/PersonalList'
+import Leads          from './app/pages/Leads'
 
 function LandingPage() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -79,6 +81,8 @@ export default function App() {
       <Route path="/ordenes"          element={<AppPage><Ordenes /></AppPage>} />
       <Route path="/alertas"          element={<AppPage><Alertas /></AppPage>} />
       <Route path="/escaner"          element={<AppPage><Escaner /></AppPage>} />
+      <Route path="/personal"         element={<AppPage><PersonalList /></AppPage>} />
+      <Route path="/leads"            element={<AppPage><Leads /></AppPage>} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />

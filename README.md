@@ -1,302 +1,171 @@
 # AlmaControl — Sistema SaaS de Gestión de Inventario
 
-Sistema de inventario y almacenes para PYME bolivianas.  
-**Stack:** Laravel 12 + Sanctum (API REST) · React 19 + Vite + Tailwind CSS v4
+> Sistema de Inventario y Almacenes para PYMEs Bolivianas.  
+> Stack: **Laravel 11** · **React 18** · **Vite** · **Tailwind CSS**
+
+🌐 **Landing Page (Frontend):** [https://almacontrol.shop](https://almacontrol.shop)  
+⚙️ **API REST (Backend):** [https://api.almacontrol.shop](https://api.almacontrol.shop)
 
 ---
 
-## 🌐 Accesos en Producción (Nube)
+## ¿Qué es AlmaControl?
 
-El sistema se encuentra desplegado en la nube y listo para su uso. No es necesario configurarlo localmente para probarlo.
+AlmaControl es una plataforma SaaS B2B Multi-Tenant que permite a distribuidoras y comercios bolivianos gestionar su inventario en tiempo real desde cualquier dispositivo. Cada empresa cliente tiene su propio espacio completamente aislado de datos.
+
+**Funcionalidades:**
+- 📦 Gestión de Productos con fotos y códigos de barras/QR
+- 🏪 Almacenes con mapas de ubicaciones interactivos
+- 📊 Control de Inventario con entradas y salidas en tiempo real
+- 🛒 Órdenes de Compra y Venta
+- 🔔 Alertas automáticas de stock crítico
+- 🚚 Gestión de Proveedores
+- 👤 Gestión de Personal con roles y permisos
+- 📋 Exportación de reportes en CSV
+- 📸 Escáner de código de barras por cámara del celular
+
+---
+
+## Accesos en Producción (Nube)
+
+El sistema se encuentra desplegado en la nube y listo para usar. No es necesario configurarlo localmente para probarlo.
 
 | Recurso | URL |
-|---|---|
-| Landing Page / Frontend | [https://almacontrol.shop](https://almacontrol.shop) |
-| API REST / Backend | [https://api.almacontrol.shop/api](https://api.almacontrol.shop/api) |
+|---------|-----|
+| Landing Page (Frontend) | [https://almacontrol.shop](https://almacontrol.shop) |
+| API REST (Backend) | [https://api.almacontrol.shop/api](https://api.almacontrol.shop/api) |
 
-## 🔑 Usuarios y Accesos Pre-creados (Multi-Tenant Demo)
+---
 
-El sistema ahora funciona como una plataforma SaaS Multi-Empresa. Existen 5 empresas de prueba creadas. En cada una, la contraseña por defecto para todos sus usuarios es: **`password`**
+## 🔐 Usuarios y Accesos Pre-creados (Multi-Tenant Demo)
+
+El sistema funciona como una plataforma SaaS Multi-Empresa. Existen 5 empresas de prueba creadas. En cada una, la contraseña por defecto para todos los usuarios es **`password`**.
+
+---
 
 ### 🏢 Empresa 1 — Distribuidora El Coloso
-- 👑 Admin: `franstorm352@gmail.com`
-- 🔧 Encargado: `mateouni3@gmail.com`
-- 🛒 Vendedor: `ale.quispe.coloso@gmail.com`
 
-### 🔨 Empresa 2 — Ferretería Don Remigio
-- 👑 Admin: `remigio.soria@gmail.com`
-- 🔧 Encargado: `alberto.chura.ferr@gmail.com`
-- 🛒 Vendedor: `carmen.quispe.ferr@gmail.com`
-
-### 💊 Empresa 3 — Farmacia San Lucas
-- 👑 Admin: `lucia.rojas.sanlucas@gmail.com`
-- 🔧 Encargado: `marco.pena.sanlucas@gmail.com`
-- 🛒 Vendedor: `sandra.vargas.slucas@gmail.com`
-
-### 🛍️ Empresa 4 — Abarrotes La Señora Paty
-- 👑 Admin: `paty.mamani.abarr@gmail.com`
-- 🔧 Encargado: `gonza.flores.paty@gmail.com`
-- 🛒 Vendedor: `rosa.condori.paty@gmail.com`
-
-### 🧵 Empresa 5 — Textilería Rumbo
-- 👑 Admin: `felix.condori.rumbo@gmail.com`
-- 🔧 Encargado: `naty.choque.rumbo@gmail.com`
-- 🛒 Vendedor: `wilmer.quispe.rumbo@gmail.com`
+| Rol | Correo | Contraseña |
+|-----|--------|------------|
+| Administrador | `inventario@gmail.com` | `password` |
+| Encargado | `bodega@gmail.com` | `password` |
+| Vendedor | `distribuidora.coloso0@gmail.com` | `password` |
 
 ---
 
-## 🔄 Flujos de Usuario y Creación de Cuentas
+### 🏢 Empresa 2 — Ferretería Don Remigio
 
-### 1. Creación de una Nueva Empresa (SaaS Flow)
-El registro público directo está deshabilitado para evitar usuarios "huérfanos". El flujo es:
-1. El cliente llena el formulario en la Landing Page (`almacontrol.shop`).
-2. El super-admin recibe un correo y aprueba el lead en el Dashboard Global.
-3. El sistema crea automáticamente la Empresa y un usuario Admin con contraseña segura.
-4. El cliente recibe un correo con sus credenciales.
-
-### 2. Creación de Personal Interno
-Cada empresa gestiona a su propio personal de forma aislada.
-1. El Administrador de la empresa inicia sesión.
-2. Navega a **Personal** -> **+ Nuevo Usuario**.
-3. Rellena los datos (Nombre, Correo, Contraseña, Rol).
-4. El Administrador le proporciona la contraseña al empleado.
+| Rol | Correo | Contraseña |
+|-----|--------|------------|
+| Administrador | `remigio@gmail.com` | `password` |
+| Encargado | `alberto.obrer.0@gmail.com` | `password` |
+| Vendedor | `lineker.campos.0@gmail.com` | `password` |
 
 ---
 
-## ☁️ Tecnologías de Despliegue
+### 🏢 Empresa 3 — Farmacia San Lucas
 
-El proyecto completo (Frontend React y Backend Laravel unificados) fue desplegado exitosamente utilizando:
-
-1. **GoDaddy**: Proveedor del dominio principal (`almacontrol.shop`).
-2. **Namecheap (Plan Stellar - Shared Hosting)**: Servidor web principal que aloja el código unificado de Laravel y React.
-3. **cPanel - Administrador de Archivos**: Se utilizó para subir un archivo `.zip` con el proyecto a la carpeta `public_html`.
-4. **cPanel - Bases de Datos MySQL**: Para la base de datos de producción (`almakchh_almacontrol`).
-5. **cPanel - phpMyAdmin**: Para la importación del archivo `.sql` de la estructura de la base de datos a la nube.
+| Rol | Correo | Contraseña |
+|-----|--------|------------|
+| Administrador | `farcia.sanlucas@gmail.com` | `password` |
+| Vendedor | `garcia.fharma.0@gmail.com` | `password` |
 
 ---
 
-## 💻 Entorno de Desarrollo Local (Secundario)
+### 🏢 Empresa 4 — Almacenes La Señora Betty
 
-Si deseas trabajar en el código de manera local, los requisitos y pasos son los siguientes:
-
-| Herramienta | Versión mínima |
-|---|---|
-| PHP | 8.2 |
-| MySQL / MariaDB | 10.4+ |
-| Composer | 2.x |
-| Node.js | 18+ |
-
-### Estructura del proyecto
-* **Raíz del proyecto (Frontend):** Código en React (Vite) y Tailwind CSS. Se arranca con `npm run dev`.
-* **Carpeta `backend/` (Backend):** Código en PHP (Laravel 12). Se arranca con `php artisan serve` dentro de la carpeta.
-
-### Iniciar servidor local
-1. Inicia MySQL en XAMPP.
-2. Crea la base de datos `almacontrol` en phpMyAdmin local e importa `almacontrol (1).sql`.
-3. Arranca el backend en una terminal dentro de `backend/`:
-   ```powershell
-   composer install
-   copy .env.example .env
-   php artisan key:generate
-   php artisan db:seed --class=AdminSeeder
-   php artisan serve
-   ```
-4. Arranca el frontend en otra terminal en la raíz:
-   ```powershell
-   npm install
-   npm run dev
-   ```
+| Rol | Correo | Contraseña |
+|-----|--------|------------|
+| Administrador | `betty.almacenes@gmail.com` | `password` |
+| Encargado | `operaciones.betty.0@gmail.com` | `password` |
 
 ---
 
-## 🗄️ ¿Cómo visualizar y gestionar la Base de Datos?
+### 🏢 Empresa 5 — Wartaz *(creada por flujo SaaS real)*
 
-### Opción A — phpMyAdmin (Interfaz Gráfica - RECOMENDADO)
+| Rol | Correo | Contraseña |
+|-----|--------|------------|
+| Administrador | `sgf6002402@est.univalle.edu` | `password` |
 
-Dado que estás usando XAMPP, la forma más fácil y visual de ver todos los datos, usuarios, contraseñas y tablas es usando phpMyAdmin:
+> ✅ Esta empresa fue creada a través del **flujo completo SaaS**: formulario en la Landing Page → aprobación de Lead por el Super-Admin → correo automático con credenciales → primer login con cambio automático de contraseña.
 
-1. Asegúrate de que **MySQL** y **Apache** estén corriendo en tu panel de XAMPP.
-2. Abre tu navegador y entra a: [http://localhost/phpmyadmin](http://localhost/phpmyadmin) *(Si tu Apache usa el puerto 8012, entra a [http://localhost:8012/phpmyadmin](http://localhost:8012/phpmyadmin))*
-3. En la barra lateral izquierda, busca y haz clic en la base de datos llamada **`almacontrol`**.
-4. ¡Listo! Ahí verás todas las tablas. Puedes hacer clic en `usuario` para ver las contraseñas encriptadas, o en `producto` para ver tu inventario.
+---
 
-**Tablas principales que te pueden interesar:**
-| Tabla | Descripción |
-|---|---|
-| `usuario` | Usuarios del sistema, sus correos y contraseñas (encriptadas) |
-| `producto` | Tu catálogo de productos |
-| `inventario` | Stock actual separado por almacén |
-| `movimiento_inventario` | Historial de todas las entradas y salidas de stock |
-| `alerta` | Alertas generadas de stock mínimo o agotado |
-| `ordenes` + `detalle_orden` | Órdenes de compra y venta |
-| `personal_access_tokens` | Tokens de sesión activos (Sanctum) |
+### ⭐ Super-Admin del Sistema
 
-### Opción B — MySQL desde terminal
+| Correo | Contraseña | Descripción |
+|--------|------------|-------------|
+| `admin@almacontrol.bo` | `admin123` | Acceso total. Puede ver y aprobar Leads desde `/leads`. |
 
-```powershell
-# Conectar
-mysql -u root -p almacontrol
+---
 
-# Consultas útiles
-SELECT * FROM usuario;
-SELECT * FROM producto WHERE activo = 1;
-SELECT * FROM inventario;
-SELECT * FROM movimiento_inventario ORDER BY fecha DESC LIMIT 10;
-SELECT * FROM alerta WHERE leida = 0;
-SELECT * FROM personal_access_tokens;
+## 🔄 Flujo Completo SaaS — Cómo entra una empresa nueva
+
+```
+1. El cliente llena el formulario en almacontrol.shop
+   (Nombre, Correo, Empresa, Tamaño de empresa)
+
+2. El sistema guarda el Lead en la base de datos
+   → Se envía email de notificación al Super-Admin
+
+3. El Super-Admin inicia sesión y va a "Aprobar Leads"
+   → Ve la tabla de solicitudes pendientes
+   → Hace clic en "Aprobar"
+
+4. Al aprobar, el sistema automáticamente:
+   ✓ Crea la Empresa en la base de datos
+   ✓ Crea un Usuario con rol de Administrador
+   ✓ Genera una contraseña aleatoria temporal (8 caracteres)
+   ✓ Envía un correo al cliente con sus credenciales
+
+5. El cliente recibe el correo con:
+   → Su correo electrónico y contraseña temporal
+   → Botón de acceso directo a almacontrol.shop/login
+   → Aviso: en el primer ingreso la contraseña cambia a "password"
+
+6. El cliente inicia sesión con la contraseña temporal
+   → El sistema detecta que es su primer acceso
+   → Cambia automáticamente la contraseña a "password"
+   → El cliente queda dentro de su empresa aislada
 ```
 
 ---
 
-## 📖 Guía de Uso del Sistema (Flujo Completo)
+## 👤 Roles y Permisos
 
-Para experimentar cómo funciona AlmaControl en la vida real, te recomendamos seguir este flujo paso a paso:
-
-### 1. Registro y Acceso
-1. Entra a **http://localhost:5173/register** y crea una cuenta nueva.
-2. Inicia sesión. Serás redirigido al **Dashboard**, que inicialmente estará en ceros.
-
-### 2. Configuración Inicial (Bases del Almacén)
-1. Ve a **Almacenes** en el menú lateral. Haz clic en "Nuevo almacén" y créalo.
-2. En la tarjeta del almacén, haz clic en **Ubicaciones** y agrega algunos espacios (ej: Pasillo 1, Estante 1, Nivel 1).
-3. Ve a **Proveedores** y registra al menos un proveedor para tu mercadería.
-
-### 3. Crear el Catálogo de Productos
-1. Ve a **Productos** -> **Nuevo producto**.
-2. Completa los datos. **💡 Puntos clave para probar:**
-   - Escribe un **Código de barras** real (puedes tomar cualquier producto que tengas a mano).
-   - Establece un **Stock mínimo** (ej. 10) para ver cómo funcionan las alertas automáticas.
-
-### 4. Ingreso de Mercadería y Mapa Visual
-1. Ve a **Inventario** -> **Registrar Movimiento**.
-2. Selecciona tipo **Entrada**, elige tu producto, tu almacén y registra una cantidad inicial alta (ej. 50).
-3. Vuelve a **Almacenes** y haz clic en **Ver mapa**. 
-   - Verás el mapa en grilla 2D. La celda estará en **Verde (Normal)**.
-   - Si haces clic en la celda, verás el detalle de los productos guardados en ese estante.
-
-### 5. Escáner Móvil (Cámara)
-1. Ve a la pestaña **Escáner** desde tu computadora (si tiene webcam) o desde tu celular.
-2. Apunta la cámara al código de barras real del producto que registraste en el paso 3.
-3. El sistema lo detectará automáticamente y te mostrará su stock actual.
-4. Registra una **Salida** de stock rápidamente desde allí mismo, sin usar el teclado.
-
-### 6. Alertas de Stock y Órdenes de Reposición a 1-Clic
-1. Realiza más **Salidas** (desde el Escáner o Inventario) hasta que el stock de tu producto baje del mínimo que estableciste (ej. que queden 5 unidades).
-2. Verás que la campana de **Alertas** (arriba a la derecha) se ilumina.
-3. Ve a la página de **Alertas**. Ahí estará la notificación de *STOCK MÍNIMO*.
-4. Haz clic en el botón **"Reponer"** dentro de la alerta. Te abrirá un modal rápido.
-5. Elige la cantidad a pedir y haz clic. ¡Listo! El sistema habrá generado una **Orden de Compra** automáticamente y habrá marcado la alerta como leída.
-
-### 7. Historial y Reportes en Excel
-1. Ve a **Movimientos** para ver la bitácora completa de todo lo que acaba de suceder (Entradas, Salidas, quién lo hizo y a qué hora).
-2. Haz clic en el botón **Exportar CSV** para descargar un reporte limpio y listo para abrir en Excel.
+| Rol | Permisos |
+|-----|----------|
+| **Administrador** | Acceso total: productos, almacenes, proveedores, órdenes, alertas, personal, inventario, reportes |
+| **Encargado** | Productos (lectura/escritura), inventario, movimientos, órdenes, alertas |
+| **Vendedor** | Solo lectura: productos, inventario |
 
 ---
 
-## ⚡ Comandos útiles de Laravel
+## 🏗️ Arquitectura Multi-Tenant
 
-```powershell
-# Ver todas las rutas API
-php artisan route:list --path=api
+El aislamiento de datos se implementa mediante la columna `id_empresa` en todas las tablas. Cada request al servidor filtra automáticamente por la empresa del usuario autenticado.
 
-# Limpiar caché de configuración
-php artisan config:clear && php artisan cache:clear
-
-# Acceder a la consola interactiva
-php artisan tinker
-
-# Verificar usuario admin en consola
-# (dentro de tinker)
-App\Models\Usuario::with('rol')->find(1)
-
-# Ver tokens activos
-DB::table('personal_access_tokens')->get()
+```
+Cliente A (Empresa 1) ─┐
+Cliente B (Empresa 2) ─┼──► API REST (Laravel 11) ──► BD MySQL
+Cliente C (Empresa 3) ─┘         (api.almacontrol.shop)    (Multi-Tenant)
 ```
 
 ---
 
-## 🏗️ Arquitectura
+## Instalación Local
 
-```
-request → routes/api.php → Controller → Model (Eloquent) → MySQL → JSON → React
-```
+```bash
+# Frontend (este repositorio)
+git clone https://github.com/F4SG/almacontrol-landing.git
+cd almacontrol-landing
+npm install
+npm run dev
+# Disponible en http://localhost:5173
 
-### Backend (`c:\almacontrol-backend\`)
-
-```
-app/
-├── Http/Controllers/Api/
-│   ├── AuthController.php        ← register, login, logout, me
-│   ├── DashboardController.php   ← estadísticas + stock crítico
-│   ├── ProductoController.php    ← CRUD productos
-│   ├── AlmacenController.php     ← CRUD almacenes
-│   ├── ProveedorController.php   ← CRUD proveedores
-│   ├── InventarioController.php  ← entrada, salida, movimientos
-│   ├── OrdenController.php       ← órdenes con DB::transaction
-│   ├── AlertaController.php      ← alertas de stock
-│   └── CategoriaController.php   ← listar categorías
-├── Models/                       ← 20 modelos Eloquent
-│   ├── Usuario.php   (tabla: usuario, PK: id_usuario)
-│   ├── Producto.php  (tabla: producto, PK: id_producto)
-│   ├── Almacen.php   (tabla: almacen, PK: id_almacen)
-│   └── ...
-└── Http/Requests/
-    └── ProductoRequest.php       ← validaciones
-```
-
-### Frontend (`c:\AlmaControl\src\`)
-
-```
-app/
-├── context/AuthContext.jsx       ← estado global de autenticación
-├── components/
-│   ├── PrivateRoute.jsx          ← redirige a /login sin token
-│   ├── AppLayout.jsx             ← sidebar + header
-│   └── Spinner.jsx
-├── services/api.js               ← todas las llamadas HTTP
-└── pages/
-    ├── Login.jsx / Register.jsx  ← auth
-    ├── Dashboard.jsx             ← estadísticas reales
-    ├── Productos.jsx             ← lista paginada
-    ├── ProductoForm.jsx          ← crear/editar
-    ├── Almacenes.jsx
-    ├── Inventario.jsx            ← tabla stock + formulario entrada/salida
-    ├── Movimientos.jsx           ← historial con filtros
-    ├── Ordenes.jsx               ← crear órdenes con detalles
-    └── Alertas.jsx               ← alertas de stock
+# Backend (repositorio separado)
+# Ver: /almacontrol-backend
 ```
 
 ---
 
-## 🔧 Solución de problemas
-
-| Error | Causa | Solución |
-|---|---|---|
-| `Connection refused` en login | Backend no corre | Ejecutar `php artisan serve` en `c:\almacontrol-backend` |
-| `Error de conexión` en la landing | Backend no corre | Ídem arriba |
-| `SQLSTATE[HY000] [2002]` | MySQL no está activo | Iniciar MySQL en XAMPP |
-| `401 No autenticado` | Token expirado o inválido | Hacer logout y login de nuevo |
-| `422` en registro | Correo ya existe | Usar otro correo o verificar en phpMyAdmin |
-| `No puedo ver /dashboard` | Sin token | Hacer login primero en `/login` |
-
----
-
-## 📋 Checklist de entrega
-
-- [x] Autenticación Sanctum (register/login/logout/me)
-- [x] Modelos Eloquent con `$table` y `$primaryKey` en español
-- [x] CRUD Productos con validaciones y soft-delete
-- [x] CRUD Almacenes y Proveedores
-- [x] Inventario: entradas, salidas, alertas automáticas
-- [x] Dashboard con datos reales de la BD
-- [x] Órdenes con transacción DB
-- [x] Alertas STOCK_MINIMO y STOCK_CERO automáticas
-- [x] PrivateRoute en frontend (rutas protegidas)
-- [x] CaptureForm conectada al backend real
-- [x] Navbar con botones Login/Registrarse
-- [x] CORS configurado para localhost:5173
-- [x] Cero datos hardcodeados — todo desde la BD
-
----
-
-
+*© 2026 AlmaControl — Sistema de Gestión de Inventario SaaS para PYMEs Bolivianas*

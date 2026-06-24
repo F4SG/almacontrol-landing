@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
   ],
   build: {
-    outDir: '../almacontrol-backend/public',
-    emptyOutDir: false,
+    outDir: 'dist',
+    emptyOutDir: true,
   }
 })
