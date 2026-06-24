@@ -14,24 +14,52 @@ El sistema se encuentra desplegado en la nube y listo para su uso. No es necesar
 | Landing Page / Frontend | [https://almacontrol.shop](https://almacontrol.shop) |
 | API REST / Backend | [https://api.almacontrol.shop/api](https://api.almacontrol.shop/api) |
 
-## 🔑 Usuarios y Accesos Pre-creados
+## 🔑 Usuarios y Accesos Pre-creados (Multi-Tenant Demo)
 
-El sistema cuenta con un sistema robusto de roles. Puedes probar la aplicación con las siguientes credenciales (asegúrate de ingresar al [portal de la aplicación](https://almacontrol.shop/login)):
+El sistema ahora funciona como una plataforma SaaS Multi-Empresa. Existen 5 empresas de prueba creadas. En cada una, la contraseña por defecto para todos sus usuarios es: **`password`**
 
-### 1. Administrador (Rol ID: 1)
-Acceso total al sistema. Es el único rol que puede crear Encargados, Vendedores u otros Administradores.
-- **Correo:** `admin@almacontrol.bo`
-- **Contraseña:** `admin123`
+### 🏢 Empresa 1 — Distribuidora El Coloso
+- 👑 Admin: `franstorm352@gmail.com`
+- 🔧 Encargado: `mateouni3@gmail.com`
+- 🛒 Vendedor: `ale.quispe.coloso@gmail.com`
 
-### 2. Encargado (Rol ID: 2)
-Acceso al registro de entradas, salidas y conteos de inventario.
-- **Correo:** `encargado@almacontrol.bo`
-- **Contraseña:** `encargado123`
+### 🔨 Empresa 2 — Ferretería Don Remigio
+- 👑 Admin: `remigio.soria@gmail.com`
+- 🔧 Encargado: `alberto.chura.ferr@gmail.com`
+- 🛒 Vendedor: `carmen.quispe.ferr@gmail.com`
 
-### 3. Vendedor (Rol ID: 3)
-Acceso de solo lectura para consulta de inventario. No puede hacer movimientos ni ver costos.
-- **Correo:** `vendedor@almacontrol.bo`
-- **Contraseña:** `vendedor123`
+### 💊 Empresa 3 — Farmacia San Lucas
+- 👑 Admin: `lucia.rojas.sanlucas@gmail.com`
+- 🔧 Encargado: `marco.pena.sanlucas@gmail.com`
+- 🛒 Vendedor: `sandra.vargas.slucas@gmail.com`
+
+### 🛍️ Empresa 4 — Abarrotes La Señora Paty
+- 👑 Admin: `paty.mamani.abarr@gmail.com`
+- 🔧 Encargado: `gonza.flores.paty@gmail.com`
+- 🛒 Vendedor: `rosa.condori.paty@gmail.com`
+
+### 🧵 Empresa 5 — Textilería Rumbo
+- 👑 Admin: `felix.condori.rumbo@gmail.com`
+- 🔧 Encargado: `naty.choque.rumbo@gmail.com`
+- 🛒 Vendedor: `wilmer.quispe.rumbo@gmail.com`
+
+---
+
+## 🔄 Flujos de Usuario y Creación de Cuentas
+
+### 1. Creación de una Nueva Empresa (SaaS Flow)
+El registro público directo está deshabilitado para evitar usuarios "huérfanos". El flujo es:
+1. El cliente llena el formulario en la Landing Page (`almacontrol.shop`).
+2. El super-admin recibe un correo y aprueba el lead en el Dashboard Global.
+3. El sistema crea automáticamente la Empresa y un usuario Admin con contraseña segura.
+4. El cliente recibe un correo con sus credenciales.
+
+### 2. Creación de Personal Interno
+Cada empresa gestiona a su propio personal de forma aislada.
+1. El Administrador de la empresa inicia sesión.
+2. Navega a **Personal** -> **+ Nuevo Usuario**.
+3. Rellena los datos (Nombre, Correo, Contraseña, Rol).
+4. El Administrador le proporciona la contraseña al empleado.
 
 ---
 
