@@ -52,18 +52,17 @@ export default function CaptureForm({ onSuccess }) {
     }
     setSubmitting(true)
     try {
-      const res = await fetch('https://api.almacontrol.shop/api/auth/register', {
+      const res = await fetch('https://api.almacontrol.shop/api/leads', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          nombre:     values.name.split(' ')[0],
-          apellido:   values.name.split(' ').slice(1).join(' ') || '-',
-          correo:     values.email,
-          contrasena: 'Temporal123!',
-          telefono:   null,
+          nombre:         values.name,
+          correo:         values.email,
+          empresa:        values.company,
+          tamano_empresa: values.size,
         }),
       })
       const data = await res.json()
