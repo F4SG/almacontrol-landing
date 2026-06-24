@@ -14,12 +14,24 @@ El sistema se encuentra desplegado en la nube y listo para su uso. No es necesar
 | Landing Page / Frontend | [https://almacontrol.shop](https://almacontrol.shop) |
 | API REST / Backend | [https://api.almacontrol.shop/api](https://api.almacontrol.shop/api) |
 
-### 🔐 Credenciales de Administrador (Producción)
-| Campo | Valor |
-|---|---|
-| Correo | `admin@almacontrol.bo` |
-| Contraseña | `Admin123!` |
-| Rol | Administrador |
+## 🔑 Usuarios y Accesos Pre-creados
+
+El sistema cuenta con un sistema robusto de roles. Puedes probar la aplicación con las siguientes credenciales (asegúrate de ingresar al [portal de la aplicación](https://almacontrol.shop/login)):
+
+### 1. Administrador (Rol ID: 1)
+Acceso total al sistema. Es el único rol que puede crear Encargados, Vendedores u otros Administradores.
+- **Correo:** `admin@almacontrol.bo`
+- **Contraseña:** `admin123`
+
+### 2. Encargado (Rol ID: 2)
+Acceso al registro de entradas, salidas y conteos de inventario.
+- **Correo:** `encargado@almacontrol.bo`
+- **Contraseña:** `encargado123`
+
+### 3. Vendedor (Rol ID: 3)
+Acceso de solo lectura para consulta de inventario. No puede hacer movimientos ni ver costos.
+- **Correo:** `vendedor@almacontrol.bo`
+- **Contraseña:** `vendedor123`
 
 ---
 
