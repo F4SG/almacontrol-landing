@@ -15,7 +15,13 @@ class InventarioController extends Controller
     // GET /api/inventario
     public function index(Request $request)
     {
-        $query = Inventario::with(['producto.categoria', 'almacen']);
+        $idEmpresa = $request->user()->id_empresa;
+
+        // Obtenemos SOLO los IDs de productos que pertenecen a esta empresa
+        $productoIds = Producto::where('id_empresa', $idEmpresa)->pluck('id_producto');
+
+        $query = Inventario::with(['producto.categoria', 'almacen'])
+            ->whereIn('id_producto', $productoIds);
 
         if ($request->filled('almacen_id')) {
             $query->where('id_almacen', $request->almacen_id);
@@ -54,6 +60,7 @@ class InventarioController extends Controller
 
         // Registrar movimiento
         $movimiento = MovimientoInventario::create([
+            'id_empresa'     => $request->user()->id_empresa,
             'id_producto'    => $data['id_producto'],
             'id_almacen'     => $data['id_almacen'],
             'id_lote'        => $data['id_lote'] ?? null,
@@ -86,6 +93,7 @@ class InventarioController extends Controller
                                 'leida'       => 0,
                             ],
                             [
+                                'id_empresa'     => $request->user()->id_empresa,
                                 'mensaje'        => "Vencimiento próximo: {$producto?->nombre} vence el {$lote->fecha_vencimiento} ({$diasParaVencer} días restantes)",
                                 'fecha_generada' => now(),
                             ]
@@ -133,6 +141,7 @@ class InventarioController extends Controller
 
         // Registrar movimiento
         $movimiento = MovimientoInventario::create([
+            'id_empresa'     => $request->user()->id_empresa,
             'id_producto'    => $data['id_producto'],
             'id_almacen'     => $data['id_almacen'],
             'id_lote'        => $data['id_lote'] ?? null,
@@ -157,6 +166,7 @@ class InventarioController extends Controller
 
         if ($stockDespues === 0) {
             Alerta::create([
+                'id_empresa'    => $request->user()->id_empresa,
                 'id_producto'   => $data['id_producto'],
                 'id_almacen'    => $data['id_almacen'],
                 'tipo_alerta'   => 'STOCK_CERO',
@@ -166,6 +176,7 @@ class InventarioController extends Controller
             ]);
         } elseif ($producto && $stockDespues <= $producto->stock_minimo) {
             Alerta::create([
+                'id_empresa'    => $request->user()->id_empresa,
                 'id_producto'   => $data['id_producto'],
                 'id_almacen'    => $data['id_almacen'],
                 'tipo_alerta'   => 'STOCK_MINIMO',
@@ -183,7 +194,10 @@ class InventarioController extends Controller
     // GET /api/movimientos
     public function movimientos(Request $request)
     {
+        $idEmpresa = $request->user()->id_empresa;
+
         $query = MovimientoInventario::with(['producto', 'almacen', 'usuario'])
+            ->where('id_empresa', $idEmpresa)
             ->orderBy('fecha', 'desc');
 
         if ($request->filled('almacen_id')) {

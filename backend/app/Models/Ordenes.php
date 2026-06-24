@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\BelongsToEmpresa;
 
 class Ordenes extends Model
 {
+    use BelongsToEmpresa;
+
     protected $table      = 'ordenes';
     protected $primaryKey = 'id_orden';
     public    $timestamps = false;
@@ -46,3 +49,4 @@ class Ordenes extends Model
         return $this->hasMany(DetalleOrden::class, 'id_orden', 'id_orden');
     }
 }
+

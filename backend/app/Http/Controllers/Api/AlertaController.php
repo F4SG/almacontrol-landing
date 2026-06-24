@@ -8,10 +8,13 @@ use Illuminate\Http\Request;
 
 class AlertaController extends Controller
 {
-    // GET /api/alertas → solo no leídas
+    // GET /api/alertas → solo no leídas de la empresa
     public function index()
     {
+        $idEmpresa = request()->user()->id_empresa;
+
         $alertas = Alerta::with(['producto', 'almacen'])
+            ->where('id_empresa', $idEmpresa)
             ->where('leida', 0)
             ->orderBy('fecha_generada', 'desc')
             ->get();
@@ -22,7 +25,8 @@ class AlertaController extends Controller
     // PUT /api/alertas/{id}/leer
     public function leer($id)
     {
-        $alerta = Alerta::findOrFail($id);
+        $idEmpresa = request()->user()->id_empresa;
+        $alerta = Alerta::where('id_empresa', $idEmpresa)->findOrFail($id);
         $alerta->update([
             'leida'      => 1,
             'fecha_leida'=> now(),
@@ -34,10 +38,14 @@ class AlertaController extends Controller
     // PUT /api/alertas/leer-todas
     public function leerTodas()
     {
-        Alerta::where('leida', 0)->update([
-            'leida'      => 1,
-            'fecha_leida'=> now(),
-        ]);
+        $idEmpresa = request()->user()->id_empresa;
+
+        Alerta::where('id_empresa', $idEmpresa)
+              ->where('leida', 0)
+              ->update([
+                  'leida'      => 1,
+                  'fecha_leida'=> now(),
+              ]);
 
         return response()->json(['message' => 'Todas las alertas marcadas como leídas']);
     }

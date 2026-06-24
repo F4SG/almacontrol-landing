@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\BelongsToEmpresa;
 
 class Alerta extends Model
 {
+    use BelongsToEmpresa;
+
     protected $table      = 'alerta';
     protected $primaryKey = 'id_alerta';
     public    $timestamps = false;
@@ -31,3 +34,4 @@ class Alerta extends Model
         return $this->belongsTo(Almacen::class, 'id_almacen', 'id_almacen');
     }
 }
+

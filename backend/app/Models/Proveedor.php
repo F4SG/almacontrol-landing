@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\BelongsToEmpresa;
 
 class Proveedor extends Model
 {
+    use BelongsToEmpresa;
+
     protected $table      = 'proveedor';
     protected $primaryKey = 'id_proveedor';
     public    $timestamps = false;
@@ -27,3 +30,4 @@ class Proveedor extends Model
         return $this->hasMany(Producto::class, 'id_proveedor', 'id_proveedor');
     }
 }
+

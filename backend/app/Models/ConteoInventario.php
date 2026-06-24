@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\BelongsToEmpresa;
 
 class ConteoInventario extends Model
 {
+    use BelongsToEmpresa;
+
     protected $table      = 'conteo_inventario';
     protected $primaryKey = 'id_conteo';
     public    $timestamps = false;
@@ -35,3 +38,4 @@ class ConteoInventario extends Model
         return $this->hasMany(DetalleConteo::class, 'id_conteo', 'id_conteo');
     }
 }
+

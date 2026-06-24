@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\BelongsToEmpresa;
 
 class CategoriaProducto extends Model
 {
+    use BelongsToEmpresa;
+
     protected $table      = 'categoria_producto';
     protected $primaryKey = 'id_categoria';
     public    $timestamps = false;
@@ -17,3 +20,4 @@ class CategoriaProducto extends Model
         return $this->hasMany(Producto::class, 'id_categoria', 'id_categoria');
     }
 }
+

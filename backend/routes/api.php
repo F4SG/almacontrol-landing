@@ -12,6 +12,8 @@ use App\Http\Controllers\Api\AlertaController;
 use App\Http\Controllers\Api\CategoriaController;
 use App\Http\Controllers\Api\UbicacionController;
 use App\Http\Controllers\Api\ReporteController;
+use App\Http\Controllers\Api\UsuarioController;
+use App\Http\Controllers\Api\LeadController;
 
 
 // ── Auth (públicas) ──────────────────────────────────────────────────────────
@@ -22,49 +24,85 @@ Route::prefix('auth')->group(function () {
     Route::get('me',        [AuthController::class, 'me'])->middleware('auth:sanctum');
 });
 
-// ── Rutas protegidas ─────────────────────────────────────────────────────────
+Route::post('leads', [LeadController::class, 'store']);
+Route::get('leads', [LeadController::class, 'index']);
+Route::get('leads/{id}/approve', [LeadController::class, 'approve']);
+
+// ── Rutas protegidas (cualquier usuario autenticado) ─────────────────────────
 Route::middleware('auth:sanctum')->group(function () {
 
-    // Dashboard
+    // Dashboard — todos los roles pueden ver el resumen
     Route::get('dashboard', [DashboardController::class, 'index']);
 
-    // Categorías
+    // Categorías — solo lectura, todos los roles
     Route::get('categorias-lista', [CategoriaController::class, 'index']);
 
-    // Productos
-    Route::get('productos/buscar',     [ProductoController::class, 'buscar']);
-    Route::apiResource('productos', ProductoController::class);
+    // ── Productos ────────────────────────────────────────────────────────────
+    // Lectura: todos los roles
+    Route::get('productos/buscar', [ProductoController::class, 'buscar']);
+    Route::get('productos',        [ProductoController::class, 'index']);
+    Route::get('productos/{producto}', [ProductoController::class, 'show']);
 
-    // Almacenes
-    Route::apiResource('almacenes', AlmacenController::class);
+    // Escritura: solo Administrador y Encargado
+    Route::post('productos',             [ProductoController::class, 'store'])
+        ->middleware('role:Administrador,Encargado');
+    Route::put('productos/{producto}',   [ProductoController::class, 'update'])
+        ->middleware('role:Administrador,Encargado');
+    Route::delete('productos/{producto}',[ProductoController::class, 'destroy'])
+        ->middleware('role:Administrador,Encargado');
 
-    // Proveedores
-    Route::apiResource('proveedores', ProveedorController::class);
+    // ── Almacenes — solo Administrador ──────────────────────────────────────
+    Route::apiResource('almacenes', AlmacenController::class)
+        ->middleware('role:Administrador');
 
-    // Inventario
-    Route::get('inventario',              [InventarioController::class, 'index']);
-    Route::post('inventario/entrada',     [InventarioController::class, 'entrada']);
-    Route::post('inventario/salida',      [InventarioController::class, 'salida']);
-    Route::get('movimientos',             [InventarioController::class, 'movimientos']);
+    // ── Proveedores — solo Administrador ────────────────────────────────────
+    Route::apiResource('proveedores', ProveedorController::class)
+        ->middleware('role:Administrador');
 
-    // Órdenes
-    Route::get('ordenes',                 [OrdenController::class, 'index']);
-    Route::post('ordenes',                [OrdenController::class, 'store']);
-    Route::get('ordenes/{id}',            [OrdenController::class, 'show']);
-    Route::put('ordenes/{id}/estado',     [OrdenController::class, 'cambiarEstado']);
+    // ── Inventario ───────────────────────────────────────────────────────────
+    // Lectura: todos los roles
+    Route::get('inventario',  [InventarioController::class, 'index']);
+    Route::get('movimientos', [InventarioController::class, 'movimientos']);
 
-    // Alertas
-    Route::get('alertas',                 [AlertaController::class, 'index']);
-    Route::put('alertas/leer-todas',      [AlertaController::class, 'leerTodas']);
-    Route::put('alertas/{id}/leer',       [AlertaController::class, 'leer']);
+    // Escritura: Administrador y Encargado
+    Route::post('inventario/entrada', [InventarioController::class, 'entrada'])
+        ->middleware('role:Administrador,Encargado');
+    Route::post('inventario/salida',  [InventarioController::class, 'salida'])
+        ->middleware('role:Administrador,Encargado');
 
-    // Ubicaciones del almacén (mapa digital)
-    Route::get('almacenes/{id}/ubicaciones',    [UbicacionController::class, 'index']);
-    Route::post('almacenes/{id}/ubicaciones',   [UbicacionController::class, 'store']);
-    Route::get('almacenes/{id}/mapa',           [UbicacionController::class, 'mapa']);
-    Route::delete('ubicaciones/{id}',           [UbicacionController::class, 'destroy']);
+    // ── Órdenes ───────────────────────────────────────────────────────────────
+    // Lectura: todos los roles
+    Route::get('ordenes',      [OrdenController::class, 'index']);
+    Route::get('ordenes/{id}', [OrdenController::class, 'show']);
 
-    // Reportes CSV
-    Route::get('reportes/inventario-csv',  [ReporteController::class, 'inventarioCsv']);
-    Route::get('reportes/movimientos-csv', [ReporteController::class, 'movimientosCsv']);
+    // Escritura: Administrador y Encargado
+    Route::post('ordenes',                [OrdenController::class, 'store'])
+        ->middleware('role:Administrador,Encargado');
+    Route::put('ordenes/{id}/estado',     [OrdenController::class, 'cambiarEstado'])
+        ->middleware('role:Administrador,Encargado');
+
+    // ── Alertas — todos los roles pueden ver; leer las propias está OK ────────
+    Route::get('alertas',              [AlertaController::class, 'index']);
+    Route::put('alertas/leer-todas',   [AlertaController::class, 'leerTodas'])
+        ->middleware('role:Administrador,Encargado');
+    Route::put('alertas/{id}/leer',    [AlertaController::class, 'leer'])
+        ->middleware('role:Administrador,Encargado');
+
+    // ── Ubicaciones — Administrador y Encargado ───────────────────────────────
+    Route::get('almacenes/{id}/ubicaciones',  [UbicacionController::class, 'index']);
+    Route::post('almacenes/{id}/ubicaciones', [UbicacionController::class, 'store'])
+        ->middleware('role:Administrador,Encargado');
+    Route::get('almacenes/{id}/mapa',         [UbicacionController::class, 'mapa']);
+    Route::delete('ubicaciones/{id}',         [UbicacionController::class, 'destroy'])
+        ->middleware('role:Administrador,Encargado');
+
+    // ── Reportes — Administrador y Encargado ─────────────────────────────────
+    Route::get('reportes/inventario-csv',  [ReporteController::class, 'inventarioCsv'])
+        ->middleware('role:Administrador,Encargado');
+    Route::get('reportes/movimientos-csv', [ReporteController::class, 'movimientosCsv'])
+        ->middleware('role:Administrador,Encargado');
+
+    // ── Gestión de Usuarios — solo Administrador ──────────────────────────────
+    Route::apiResource('usuarios', UsuarioController::class)
+        ->middleware('role:Administrador');
 });

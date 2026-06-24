@@ -10,44 +10,16 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     // ── POST /api/auth/register ─────────────────────────────────────────────
+    // El registro directo está deshabilitado.
+    // Los nuevos clientes deben solicitar acceso desde la landing page.
+    // Los usuarios internos los crea el Admin de cada empresa desde "Personal".
     public function register(Request $request)
     {
-        $request->validate([
-            'nombre'    => 'required|string|max:100',
-            'apellido'  => 'required|string|max:100',
-            'correo'    => 'required|email|max:150',
-            'contrasena'=> 'required|string|min:6',
-            'telefono'  => 'nullable|string|max:20',
-        ]);
-
-        if (Usuario::where('correo', $request->correo)->exists()) {
-            return response()->json(['message' => 'El correo ya está registrado'], 422);
-        }
-
-        $usuario = Usuario::create([
-            'id_rol'         => 2, // Encargado por defecto
-            'nombre'         => $request->nombre,
-            'apellido'       => $request->apellido,
-            'correo'         => $request->correo,
-            'contrasena'     => bcrypt($request->contrasena),
-            'telefono'       => $request->telefono,
-            'activo'         => 1,
-            'fecha_creacion' => now(),
-        ]);
-
-        $token = $usuario->createToken('almacontrol-token')->plainTextToken;
-
         return response()->json([
-            'token' => $token,
-            'user'  => [
-                'id_usuario' => $usuario->id_usuario,
-                'nombre'     => $usuario->nombre,
-                'apellido'   => $usuario->apellido,
-                'correo'     => $usuario->correo,
-                'rol'        => $usuario->rol,
-            ],
-        ], 201);
+            'message' => 'El registro directo no está disponible. Solicita acceso desde almacontrol.shop o contacta al administrador de tu empresa.',
+        ], 403);
     }
+
 
     // ── POST /api/auth/login ────────────────────────────────────────────────
     public function login(Request $request)
@@ -64,6 +36,17 @@ class AuthController extends Controller
 
         if (! $usuario || ! Hash::check($request->contrasena, $usuario->contrasena)) {
             return response()->json(['message' => 'Credenciales incorrectas'], 401);
+        }
+
+        // Si es su primer acceso, cambiar la contraseña a "password" y marcar primer_acceso como falso
+        if ($usuario->primer_acceso) {
+            $usuario->update([
+                'contrasena'    => bcrypt('password'),
+                'primer_acceso' => false,
+            ]);
+            // Actualizar la instancia en memoria también para no tener discrepancias
+            $usuario->contrasena = bcrypt('password');
+            $usuario->primer_acceso = false;
         }
 
         // Eliminar tokens anteriores

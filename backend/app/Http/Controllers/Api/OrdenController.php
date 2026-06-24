@@ -13,7 +13,10 @@ class OrdenController extends Controller
     // GET /api/ordenes
     public function index()
     {
+        $idEmpresa = request()->user()->id_empresa;
+
         $ordenes = Ordenes::with(['tipoOrden', 'usuario', 'almacenOrigen', 'detalles.producto'])
+            ->where('id_empresa', $idEmpresa)
             ->orderBy('fecha_orden', 'desc')
             ->paginate(15);
 
@@ -36,6 +39,7 @@ class OrdenController extends Controller
 
         return DB::transaction(function () use ($data, $request) {
             $orden = Ordenes::create([
+                'id_empresa'         => $request->user()->id_empresa,
                 'id_tipo_orden'      => $data['id_tipo_orden'],
                 'id_almacen_origen'  => $data['id_almacen_origen'],
                 'id_almacen_destino' => $data['id_almacen_destino'] ?? null,
@@ -71,9 +75,11 @@ class OrdenController extends Controller
     // GET /api/ordenes/{id}
     public function show($id)
     {
+        $idEmpresa = request()->user()->id_empresa;
+
         $orden = Ordenes::with([
             'tipoOrden', 'usuario', 'almacenOrigen', 'almacenDestino', 'detalles.producto',
-        ])->findOrFail($id);
+        ])->where('id_empresa', $idEmpresa)->findOrFail($id);
 
         return response()->json($orden);
     }
@@ -81,7 +87,8 @@ class OrdenController extends Controller
     // PUT /api/ordenes/{id}/estado
     public function cambiarEstado(Request $request, $id)
     {
-        $orden = Ordenes::findOrFail($id);
+        $idEmpresa = request()->user()->id_empresa;
+        $orden = Ordenes::where('id_empresa', $idEmpresa)->findOrFail($id);
 
         $data = $request->validate([
             'estado' => 'required|in:PROCESADA,ANULADA',

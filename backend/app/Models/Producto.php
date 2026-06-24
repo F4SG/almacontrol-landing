@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\BelongsToEmpresa;
 
 class Producto extends Model
 {
+    use BelongsToEmpresa;
+
     protected $table      = 'producto';
     protected $primaryKey = 'id_producto';
     public    $timestamps = false;
@@ -133,3 +136,4 @@ class Producto extends Model
             ->first();
     }
 }
+

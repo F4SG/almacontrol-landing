@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\BelongsToEmpresa;
 
 class MovimientoInventario extends Model
 {
+    use BelongsToEmpresa;
+
     protected $table      = 'movimiento_inventario';
     protected $primaryKey = 'id_movimiento';
     public    $timestamps = false;
@@ -44,3 +47,4 @@ class MovimientoInventario extends Model
         return $this->belongsTo(Lote::class, 'id_lote', 'id_lote');
     }
 }
+

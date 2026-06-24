@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\BelongsToEmpresa;
 
 class OrdenReposicion extends Model
 {
+    use BelongsToEmpresa;
+
     protected $table      = 'orden_reposicion';
     protected $primaryKey = 'id_reposicion';
     public    $timestamps = false;
@@ -36,3 +39,4 @@ class OrdenReposicion extends Model
         return $this->belongsTo(Proveedor::class, 'id_proveedor', 'id_proveedor');
     }
 }
+

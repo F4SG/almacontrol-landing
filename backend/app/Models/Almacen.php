@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\BelongsToEmpresa;
 
 class Almacen extends Model
 {
+    use BelongsToEmpresa;
+
     protected $table      = 'almacen';
     protected $primaryKey = 'id_almacen';
     public    $timestamps = false;
@@ -31,3 +34,4 @@ class Almacen extends Model
         return $this->hasMany(Inventario::class, 'id_almacen', 'id_almacen');
     }
 }
+

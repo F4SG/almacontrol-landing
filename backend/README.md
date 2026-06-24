@@ -1,59 +1,357 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# AlmaControl — Backend (WMS SaaS)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> Sistema de Gestión de Inventario (Warehouse Management System) multi-tenant para PYMEs bolivianas.  
+> Backend construido en **Laravel 11** + **MySQL** + **Laravel Sanctum** (API tokens).  
+> Frontend React en: [almacontrol.shop](https://almacontrol.shop) | API en: [api.almacontrol.shop](https://api.almacontrol.shop)
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tabla de Contenidos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. [Descripción General](#descripción-general)
+2. [Arquitectura Multi-Tenant](#arquitectura-multi-tenant)
+3. [Flujos de Usuario](#flujos-de-usuario)
+4. [Roles y Permisos](#roles-y-permisos)
+5. [Empresas y Usuarios de Prueba](#empresas-y-usuarios-de-prueba)
+6. [Endpoints de la API](#endpoints-de-la-api)
+7. [Instalación Local](#instalación-local)
+8. [Variables de Entorno](#variables-de-entorno)
+9. [Estructura del Proyecto](#estructura-del-proyecto)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Descripción General
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+AlmaControl es una plataforma SaaS B2B que permite a distribuidoras y comercios bolivianos gestionar su inventario en tiempo real desde el celular o PC. Cada empresa cliente tiene su propio espacio aislado de datos (Multi-Tenancy por columna `id_empresa`).
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Funcionalidades principales:**
+- 📦 Gestión de Productos con fotos y códigos de barras/QR
+- 🏪 Gestión de Almacenes con mapas de ubicaciones
+- 📊 Control de Inventario con entradas y salidas
+- 🛒 Órdenes de Compra y Venta
+- 🔔 Alertas automáticas de stock crítico
+- 🚚 Gestión de Proveedores
+- 👤 Gestión de Personal con roles
+- 📋 Exportación de reportes CSV
+- 📸 Escáner de código de barras por cámara
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Arquitectura Multi-Tenant
 
-### Premium Partners
+El aislamiento de datos se implementa mediante la columna `id_empresa` en todas las tablas principales. **Cada consulta al servidor filtra automáticamente por la empresa del usuario autenticado.**
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```
+┌─────────────────────────────────────────────┐
+│              almacontrol.shop               │
+│           (Frontend React/Vite)             │
+└──────────────────┬──────────────────────────┘
+                   │ HTTPS (JWT Bearer Token)
+┌──────────────────▼──────────────────────────┐
+│           api.almacontrol.shop              │
+│         (Laravel 11 REST API)               │
+│                                             │
+│  ┌─────────┐  ┌──────────┐  ┌──────────┐  │
+│  │Empresa A│  │Empresa B │  │Empresa C │  │
+│  │id = 1   │  │id = 2    │  │id = 3    │  │
+│  └─────────┘  └──────────┘  └──────────┘  │
+│                                             │
+│         almakchh_almacontrol (MySQL)        │
+└─────────────────────────────────────────────┘
+```
 
-## Contributing
+**Tablas con aislamiento por empresa:**
+- `producto` → `id_empresa`
+- `inventario` → (via producto)
+- `almacen` → `id_empresa`
+- `proveedor` → `id_empresa`
+- `orden` → `id_empresa`
+- `alerta` → `id_empresa`
+- `usuario` → `id_empresa`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## Flujos de Usuario
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 🏢 Flujo 1: Registro de Nueva Empresa (SaaS)
 
-## Security Vulnerabilities
+```
+1. El cliente llena el formulario en almacontrol.shop (Landing Page)
+   → Nombre, Correo, Empresa, Tamaño de empresa
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+2. El sistema guarda el Lead en la base de datos
+   → Tabla: leads
+   → Se envía email de notificación a admin@almacontrol.bo
 
-## License
+3. El Super-Admin revisa los leads en /leads dentro del dashboard
+   → Ve la tabla de solicitudes pendientes
+   → Da clic en "Aprobar"
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+4. Al aprobar, el sistema automáticamente:
+   a) Crea la Empresa en la tabla `empresa`
+   b) Crea un Usuario Admin con rol id_rol=1
+   c) Genera una contraseña aleatoria temporal (8 caracteres)
+   d) Envía un correo al cliente con sus credenciales
+
+5. El cliente recibe el correo con:
+   → Correo electrónico (su correo registrado)
+   → Contraseña temporal aleatoria
+   → Botón de acceso directo a almacontrol.shop/login
+   → Nota: la contraseña cambia a "password" en el primer ingreso
+
+6. El cliente inicia sesión con la contraseña temporal
+   → El sistema detecta primer_acceso = true
+   → Cambia automáticamente la contraseña a "password"
+   → El usuario queda activo con su empresa y datos aislados
+```
+
+### 👤 Flujo 2: Creación de Personal Interno
+
+```
+1. El Admin de la empresa va a la sección "Personal"
+2. Hace clic en "Nuevo Usuario"
+3. Llena el formulario: nombre, correo, rol (Admin/Encargado/Vendedor)
+4. El sistema crea el usuario asignado a la misma empresa (id_empresa)
+5. El nuevo empleado inicia sesión con las credenciales creadas
+```
+
+### ❌ Flujo 3: Registro Público — BLOQUEADO
+
+```
+El endpoint POST /api/auth/register devuelve 403.
+El registro directo está deshabilitado por diseño.
+Los nuevos clientes DEBEN pasar por el formulario de la Landing Page.
+Los empleados DEBEN ser creados por el Admin de su empresa.
+Esto evita usuarios "huérfanos" sin empresa asignada.
+```
+
+---
+
+## Roles y Permisos
+
+| Rol | id_rol | Permisos |
+|-----|--------|----------|
+| **Administrador** | 1 | Acceso total: productos, almacenes, proveedores, órdenes, alertas, personal, inventario |
+| **Encargado** | 2 | Productos (lectura/escritura), inventario, movimientos, órdenes, alertas |
+| **Vendedor** | 3 | Solo lectura: productos, inventario |
+
+---
+
+## Empresas y Usuarios de Prueba
+
+### 🏢 Empresa: AlmaControl Sistema (Super-Admin)
+> Empresa interna del sistema. El Super-Admin tiene acceso a gestionar Leads.
+
+| Campo | Valor |
+|-------|-------|
+| Correo | `admin@almacontrol.bo` |
+| Contraseña | `admin123` |
+| Rol | Administrador (Super-Admin) |
+| Empresa | AlmaControl Sistema |
+
+---
+
+### 🏢 Empresa: Importadora Boliviana S.R.L. (id_empresa = 1)
+
+| Nombre | Correo | Contraseña | Rol |
+|--------|--------|------------|-----|
+| María García | `admin@importboliviana.com` | `password` | Administrador |
+| Carlos Mamani | `encargado@importboliviana.com` | `password` | Encargado |
+| Ana Quispe | `vendedor@importboliviana.com` | `password` | Vendedor |
+
+---
+
+### 🏢 Empresa: Distribuidora El Cóndor (id_empresa = 2)
+
+| Nombre | Correo | Contraseña | Rol |
+|--------|--------|------------|-----|
+| Roberto Flores | `admin@elcondor.com` | `password` | Administrador |
+| Lucía Tarqui | `encargado@elcondor.com` | `password` | Encargado |
+
+---
+
+### 🏢 Empresa: Farmacia San Lucas (id_empresa = 3)
+
+| Nombre | Correo | Contraseña | Rol |
+|--------|--------|------------|-----|
+| Patricia Chávez | `admin@sanlucas.com` | `password` | Administrador |
+| Diego Torrez | `vendedor@sanlucas.com` | `password` | Vendedor |
+
+---
+
+### 🏢 Empresa: Wartaz (id_empresa creada por flujo de Leads)
+
+| Nombre | Correo | Contraseña | Rol |
+|--------|--------|------------|-----|
+| Franco Salas | `sgf6002402@est.univalle.edu` | `password` | Administrador |
+
+> ✅ Esta empresa fue creada a través del flujo completo SaaS: formulario en Landing → aprobación de Lead → correo automático con credenciales → primer login con cambio automático de contraseña.
+
+---
+
+## Endpoints de la API
+
+### 🔓 Públicos (sin autenticación)
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `POST` | `/api/auth/login` | Iniciar sesión |
+| `POST` | `/api/auth/register` | **BLOQUEADO** (devuelve 403) |
+| `POST` | `/api/leads` | Registrar solicitud de nueva empresa |
+| `GET`  | `/api/leads` | Listar leads pendientes de aprobación |
+| `GET`  | `/api/leads/{id}/approve` | Aprobar un lead (crea empresa + usuario + envía correo) |
+
+### 🔐 Protegidos (requieren Bearer Token)
+
+| Método | Endpoint | Roles | Descripción |
+|--------|----------|-------|-------------|
+| `GET` | `/api/auth/me` | Todos | Datos del usuario autenticado |
+| `POST` | `/api/auth/logout` | Todos | Cerrar sesión |
+| `GET` | `/api/dashboard` | Todos | Resumen del sistema |
+| `GET` | `/api/productos` | Todos | Listar productos (filtrado por empresa) |
+| `POST` | `/api/productos` | Admin, Encargado | Crear producto |
+| `PUT` | `/api/productos/{id}` | Admin, Encargado | Actualizar producto |
+| `DELETE` | `/api/productos/{id}` | Admin, Encargado | Eliminar producto |
+| `GET` | `/api/almacenes` | Todos | Listar almacenes |
+| `POST` | `/api/almacenes` | Admin | Crear almacén |
+| `GET` | `/api/proveedores` | Todos | Listar proveedores |
+| `GET` | `/api/inventario` | Todos | Ver inventario actual |
+| `POST` | `/api/inventario/entrada` | Admin, Encargado | Registrar entrada de stock |
+| `POST` | `/api/inventario/salida` | Admin, Encargado | Registrar salida de stock |
+| `GET` | `/api/movimientos` | Todos | Historial de movimientos |
+| `GET` | `/api/ordenes` | Todos | Listar órdenes |
+| `POST` | `/api/ordenes` | Admin, Encargado | Crear orden |
+| `GET` | `/api/alertas` | Todos | Ver alertas de stock |
+| `GET` | `/api/usuarios` | Admin | Listar personal de la empresa |
+| `POST` | `/api/usuarios` | Admin | Crear nuevo usuario |
+| `GET` | `/api/reportes/inventario-csv` | Admin, Encargado | Exportar inventario CSV |
+| `GET` | `/api/reportes/movimientos-csv` | Admin, Encargado | Exportar movimientos CSV |
+
+---
+
+## Instalación Local
+
+```bash
+# 1. Clonar el repositorio
+git clone <url-del-repo>
+cd almacontrol-backend
+
+# 2. Instalar dependencias PHP
+composer install
+
+# 3. Copiar y configurar variables de entorno
+cp .env.example .env
+# Editar .env con tus credenciales de base de datos y correo
+
+# 4. Generar clave de aplicación
+php artisan key:generate
+
+# 5. Ejecutar migraciones y seeders
+php artisan migrate --seed
+
+# 6. Iniciar servidor de desarrollo
+php artisan serve
+```
+
+La API estará disponible en `http://localhost:8000/api`
+
+---
+
+## Variables de Entorno
+
+```env
+APP_NAME=AlmaControl
+APP_ENV=production
+APP_URL=https://api.almacontrol.shop
+
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=almakchh_almacontrol
+DB_USERNAME=almakchh_admin
+DB_PASSWORD=***
+
+MAIL_MAILER=smtp
+MAIL_HOST=server166.web-hosting.com   # Host del servidor de hosting
+MAIL_PORT=465
+MAIL_USERNAME=admin@almacontrol.shop
+MAIL_PASSWORD=***
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS=admin@almacontrol.shop
+MAIL_FROM_NAME="AlmaControl Sistema"
+MAIL_ADMIN_ADDRESS=franquito2712@gmail.com  # Recibe notificaciones de leads
+
+SANCTUM_STATEFUL_DOMAINS=almacontrol.shop
+SESSION_DOMAIN=.almacontrol.shop
+```
+
+---
+
+## Estructura del Proyecto
+
+```
+app/
+├── Http/
+│   ├── Controllers/Api/
+│   │   ├── AuthController.php        # Login, logout, me, register (bloqueado)
+│   │   ├── LeadController.php        # index, store, approve (flujo SaaS)
+│   │   ├── DashboardController.php   # Resumen del sistema
+│   │   ├── ProductoController.php    # CRUD productos (filtrado por empresa)
+│   │   ├── AlmacenController.php     # CRUD almacenes
+│   │   ├── InventarioController.php  # Stock, entradas, salidas, movimientos
+│   │   ├── OrdenController.php       # Órdenes de compra/venta
+│   │   ├── AlertaController.php      # Alertas de stock crítico
+│   │   ├── ProveedorController.php   # CRUD proveedores
+│   │   ├── UsuarioController.php     # Gestión de personal
+│   │   ├── ReporteController.php     # Exportación CSV
+│   │   └── UbicacionController.php  # Mapa de almacenes
+│   └── Middleware/
+│       └── CheckRole.php             # Middleware de control de roles
+├── Mail/
+│   ├── LeadNotification.php          # Email al admin cuando llega un lead
+│   └── WelcomeCredentials.php        # Email al cliente al aprobar su lead
+└── Models/
+    ├── Usuario.php                   # Auth + relaciones (Sanctum)
+    ├── Empresa.php                   # Tenant principal
+    ├── Lead.php                      # Solicitudes de acceso
+    ├── Producto.php
+    ├── Inventario.php
+    ├── Almacen.php
+    ├── Orden.php
+    ├── Alerta.php
+    └── Proveedor.php
+
+resources/views/emails/
+├── lead_notification.blade.php       # Diseño del email de notificación de lead
+└── welcome_credentials.blade.php     # Diseño del email de bienvenida al cliente
+
+routes/
+└── api.php                           # Definición de todas las rutas de la API
+```
+
+---
+
+## Tecnologías Utilizadas
+
+| Tecnología | Versión | Uso |
+|------------|---------|-----|
+| Laravel | 11 | Framework principal del backend |
+| MySQL | 8.0 | Base de datos relacional |
+| Laravel Sanctum | 4.x | Autenticación por API tokens |
+| PHP | 8.2 | Lenguaje del servidor |
+| Blade | — | Templates para correos electrónicos |
+| cPanel | — | Hosting en producción (server166.web-hosting.com) |
+
+---
+
+## Despliegue en Producción (cPanel)
+
+1. Subir archivos vía FTP o File Manager a `public_html/almacontrol-backend/`
+2. Configurar el `.env` con las credenciales de producción
+3. Verificar que `public/index.php` sea el punto de entrada del subdominio `api.almacontrol.shop`
+4. Asegurarse de que el `MAIL_HOST` sea el hostname del servidor (no el subdominio de correo)
+5. Limpiar caché: `php artisan config:cache && php artisan route:cache`
+
+---
+
+*© 2026 AlmaControl — Sistema de Gestión de Inventario SaaS para PYMEs Bolivianas*

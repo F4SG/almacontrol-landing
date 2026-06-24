@@ -1,16 +1,42 @@
 # AlmaControl — Sistema SaaS de Gestión de Inventario
 
 > Sistema de Inventario y Almacenes para PYMEs Bolivianas.  
-> Stack: **Laravel 11** · **React 18** · **Vite** · **Tailwind CSS**
+> **Monorepo:** Frontend (React) + Backend (Laravel 11) en un solo repositorio.
 
-🌐 **Landing Page (Frontend):** [https://almacontrol.shop](https://almacontrol.shop)  
-⚙️ **API REST (Backend):** [https://api.almacontrol.shop](https://api.almacontrol.shop)
+🌐 **Landing Page + App:** [https://almacontrol.shop](https://almacontrol.shop)  
+⚙️ **API REST:** [https://api.almacontrol.shop](https://api.almacontrol.shop)
+
+---
+
+## Estructura del Repositorio
+
+```
+almacontrol-landing/
+├── src/                        # Frontend — React + Vite + Tailwind
+│   ├── components/             # Componentes de la Landing Page
+│   ├── app/
+│   │   ├── pages/              # Páginas del sistema interno (Dashboard, Productos, etc.)
+│   │   ├── components/         # Layout, Sidebar, Rutas privadas
+│   │   ├── context/            # AuthContext (estado global del usuario)
+│   │   └── services/           # api.js (cliente HTTP hacia el backend)
+│   └── App.jsx                 # Rutas principales
+├── backend/                    # Backend — Laravel 11 + MySQL + Sanctum
+│   ├── app/
+│   │   ├── Http/Controllers/Api/  # Controladores REST
+│   │   ├── Models/             # Modelos Eloquent
+│   │   └── Mail/               # Clases de correos electrónicos
+│   ├── resources/views/emails/ # Templates HTML de correos (Blade)
+│   ├── routes/api.php          # Definición de todas las rutas de la API
+│   └── README.md               # Documentación detallada del backend
+├── README.md                   # Este archivo (visión general del proyecto)
+└── almacontrol (1).sql         # Dump de la base de datos con datos de prueba
+```
 
 ---
 
 ## ¿Qué es AlmaControl?
 
-AlmaControl es una plataforma SaaS B2B Multi-Tenant que permite a distribuidoras y comercios bolivianos gestionar su inventario en tiempo real desde cualquier dispositivo. Cada empresa cliente tiene su propio espacio completamente aislado de datos.
+AlmaControl es una plataforma SaaS B2B Multi-Tenant que permite a distribuidoras y comercios bolivianos gestionar su inventario en tiempo real. Cada empresa cliente tiene su propio espacio completamente aislado de datos.
 
 **Funcionalidades:**
 - 📦 Gestión de Productos con fotos y códigos de barras/QR
@@ -25,20 +51,56 @@ AlmaControl es una plataforma SaaS B2B Multi-Tenant que permite a distribuidoras
 
 ---
 
-## Accesos en Producción (Nube)
+## 🔄 Flujo Completo SaaS — Cómo entra una empresa nueva
 
-El sistema se encuentra desplegado en la nube y listo para usar. No es necesario configurarlo localmente para probarlo.
+```
+1. El cliente llena el formulario en almacontrol.shop
+   (Nombre, Correo, Empresa, Tamaño de empresa)
 
-| Recurso | URL |
-|---------|-----|
-| Landing Page (Frontend) | [https://almacontrol.shop](https://almacontrol.shop) |
-| API REST (Backend) | [https://api.almacontrol.shop/api](https://api.almacontrol.shop/api) |
+2. El sistema guarda el Lead en la base de datos
+   → Se envía email de notificación al Super-Admin
+
+3. El Super-Admin inicia sesión y va a "Aprobar Leads"
+   → Ve la tabla de solicitudes pendientes
+   → Hace clic en "Aprobar"
+
+4. Al aprobar, el sistema automáticamente:
+   ✓ Crea la Empresa en la base de datos
+   ✓ Crea un Usuario con rol de Administrador
+   ✓ Genera una contraseña aleatoria temporal (8 caracteres)
+   ✓ Envía un correo al cliente con sus credenciales
+
+5. El cliente recibe el correo con su contraseña temporal
+   → Al iniciar sesión por primera vez, la contraseña
+     cambia automáticamente a "password"
+
+6. El cliente gestiona su inventario en su espacio aislado
+   → Puede crear su propio personal (Encargados, Vendedores)
+```
+
+---
+
+## 👤 Roles y Permisos
+
+| Rol | Permisos |
+|-----|----------|
+| **Administrador** | Acceso total: productos, almacenes, proveedores, órdenes, alertas, personal, inventario, reportes |
+| **Encargado** | Productos (lectura/escritura), inventario, movimientos, órdenes, alertas |
+| **Vendedor** | Solo lectura: productos, inventario |
 
 ---
 
 ## 🔐 Usuarios y Accesos Pre-creados (Multi-Tenant Demo)
 
-El sistema funciona como una plataforma SaaS Multi-Empresa. Existen 5 empresas de prueba creadas. En cada una, la contraseña por defecto para todos los usuarios es **`password`**.
+La contraseña por defecto para todos los usuarios es **`password`**.
+
+---
+
+### ⭐ Super-Admin del Sistema
+
+| Correo | Contraseña | Descripción |
+|--------|------------|-------------|
+| `admin@almacontrol.bo` | `admin123` | Acceso total. Aprueba Leads desde `/leads`. |
 
 ---
 
@@ -86,85 +148,67 @@ El sistema funciona como una plataforma SaaS Multi-Empresa. Existen 5 empresas d
 |-----|--------|------------|
 | Administrador | `sgf6002402@est.univalle.edu` | `password` |
 
-> ✅ Esta empresa fue creada a través del **flujo completo SaaS**: formulario en la Landing Page → aprobación de Lead por el Super-Admin → correo automático con credenciales → primer login con cambio automático de contraseña.
-
----
-
-### ⭐ Super-Admin del Sistema
-
-| Correo | Contraseña | Descripción |
-|--------|------------|-------------|
-| `admin@almacontrol.bo` | `admin123` | Acceso total. Puede ver y aprobar Leads desde `/leads`. |
-
----
-
-## 🔄 Flujo Completo SaaS — Cómo entra una empresa nueva
-
-```
-1. El cliente llena el formulario en almacontrol.shop
-   (Nombre, Correo, Empresa, Tamaño de empresa)
-
-2. El sistema guarda el Lead en la base de datos
-   → Se envía email de notificación al Super-Admin
-
-3. El Super-Admin inicia sesión y va a "Aprobar Leads"
-   → Ve la tabla de solicitudes pendientes
-   → Hace clic en "Aprobar"
-
-4. Al aprobar, el sistema automáticamente:
-   ✓ Crea la Empresa en la base de datos
-   ✓ Crea un Usuario con rol de Administrador
-   ✓ Genera una contraseña aleatoria temporal (8 caracteres)
-   ✓ Envía un correo al cliente con sus credenciales
-
-5. El cliente recibe el correo con:
-   → Su correo electrónico y contraseña temporal
-   → Botón de acceso directo a almacontrol.shop/login
-   → Aviso: en el primer ingreso la contraseña cambia a "password"
-
-6. El cliente inicia sesión con la contraseña temporal
-   → El sistema detecta que es su primer acceso
-   → Cambia automáticamente la contraseña a "password"
-   → El cliente queda dentro de su empresa aislada
-```
-
----
-
-## 👤 Roles y Permisos
-
-| Rol | Permisos |
-|-----|----------|
-| **Administrador** | Acceso total: productos, almacenes, proveedores, órdenes, alertas, personal, inventario, reportes |
-| **Encargado** | Productos (lectura/escritura), inventario, movimientos, órdenes, alertas |
-| **Vendedor** | Solo lectura: productos, inventario |
+> ✅ Esta empresa fue creada a través del flujo completo SaaS: formulario → aprobación → correo automático → primer login con cambio automático de contraseña.
 
 ---
 
 ## 🏗️ Arquitectura Multi-Tenant
 
-El aislamiento de datos se implementa mediante la columna `id_empresa` en todas las tablas. Cada request al servidor filtra automáticamente por la empresa del usuario autenticado.
-
 ```
-Cliente A (Empresa 1) ─┐
-Cliente B (Empresa 2) ─┼──► API REST (Laravel 11) ──► BD MySQL
-Cliente C (Empresa 3) ─┘         (api.almacontrol.shop)    (Multi-Tenant)
+┌─────────────────────────────────────────────┐
+│           almacontrol.shop                  │
+│     Landing Page + App (React/Vite)         │
+└──────────────────┬──────────────────────────┘
+                   │ HTTPS (Bearer Token)
+┌──────────────────▼──────────────────────────┐
+│         api.almacontrol.shop                │
+│       Backend REST API (Laravel 11)         │
+│                                             │
+│  ┌─────────┐  ┌──────────┐  ┌──────────┐  │
+│  │Empresa 1│  │Empresa 2 │  │Empresa N │  │
+│  │id = 1   │  │id = 2    │  │id = N    │  │
+│  └─────────┘  └──────────┘  └──────────┘  │
+└──────────────────┬──────────────────────────┘
+                   │
+┌──────────────────▼──────────────────────────┐
+│      almakchh_almacontrol (MySQL)           │
+│  Aislamiento por columna id_empresa         │
+└─────────────────────────────────────────────┘
 ```
 
 ---
 
 ## Instalación Local
 
+### Frontend
 ```bash
-# Frontend (este repositorio)
-git clone https://github.com/F4SG/almacontrol-landing.git
-cd almacontrol-landing
 npm install
 npm run dev
 # Disponible en http://localhost:5173
-
-# Backend (repositorio separado)
-# Ver: /almacontrol-backend
 ```
+
+### Backend
+```bash
+cd backend
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
+# API disponible en http://localhost:8000/api
+```
+
+---
+
+## Tecnologías
+
+| Capa | Tecnología |
+|------|-----------|
+| Frontend | React 18, Vite, Tailwind CSS, React Router |
+| Backend | Laravel 11, PHP 8.2, Laravel Sanctum |
+| Base de datos | MySQL 8.0 |
+| Hosting | cPanel (server166.web-hosting.com) |
+| Correos | SMTP (admin@almacontrol.shop) |
 
 ---
 

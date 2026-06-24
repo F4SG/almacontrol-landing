@@ -14,14 +14,15 @@ class Usuario extends Authenticatable
     public    $timestamps = false;
 
     protected $fillable = [
-        'id_rol', 'nombre', 'apellido', 'correo',
-        'contrasena', 'telefono', 'activo', 'fecha_creacion',
+        'id_rol', 'id_empresa', 'nombre', 'apellido', 'correo',
+        'contrasena', 'telefono', 'activo', 'fecha_creacion', 'primer_acceso',
     ];
 
     protected $hidden = ['contrasena'];
 
     protected $casts = [
         'activo'          => 'boolean',
+        'primer_acceso'   => 'boolean',
         'fecha_creacion'  => 'datetime',
     ];
 
