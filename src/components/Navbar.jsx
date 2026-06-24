@@ -67,13 +67,18 @@ export default function Navbar() {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-3">
             <a
-              href="#captura"
-              onClick={(e) => handleNavClick(e, '#captura')}
+              href="/login"
+              className="text-sm font-semibold text-[#1B4332] hover:underline transition-colors"
+            >
+              Iniciar Sesión
+            </a>
+            <a
+              href="/register"
               className="inline-flex items-center px-5 py-2.5 bg-[#F59E0B] text-gray-900 text-sm font-semibold rounded-lg hover:bg-[#D97706] transition-all duration-200 hover:shadow-md active:scale-95"
             >
-              Iniciar prueba gratis
+              Registrarse
             </a>
           </div>
 
@@ -106,11 +111,16 @@ export default function Navbar() {
               </a>
             ))}
             <a
-              href="#captura"
-              onClick={(e) => handleNavClick(e, '#captura')}
-              className="mt-2 px-4 py-3 bg-[#F59E0B] text-gray-900 text-sm font-semibold rounded-lg text-center hover:bg-[#D97706] transition-colors"
+              href="/login"
+              className="mt-2 px-4 py-3 text-[#1B4332] text-sm font-semibold rounded-lg text-center hover:bg-green-50 transition-colors"
             >
-              Iniciar prueba gratis
+              Iniciar Sesión
+            </a>
+            <a
+              href="/register"
+              className="mt-1 px-4 py-3 bg-[#F59E0B] text-gray-900 text-sm font-semibold rounded-lg text-center hover:bg-[#D97706] transition-colors"
+            >
+              Registrarse
             </a>
           </div>
         </div>

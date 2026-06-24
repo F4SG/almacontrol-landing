@@ -134,13 +134,13 @@ export default function Hero({ onCTAClick }) {
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                <button
+                <a
                   id="hero-cta-primary"
-                  onClick={onCTAClick}
+                  href="/register"
                   className="inline-flex items-center justify-center px-7 py-4 bg-[#F59E0B] text-gray-900 text-base font-bold rounded-xl hover:bg-[#D97706] transition-all duration-200 hover:shadow-lg active:scale-95"
                 >
                   Inicia tu prueba gratis — 14 días sin costo
-                </button>
+                </a>
                 <button
                   id="hero-cta-secondary"
                   onClick={() => setDemoOpen(true)}
