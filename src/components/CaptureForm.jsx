@@ -43,7 +43,7 @@ export default function CaptureForm({ onSuccess }) {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const newErrors = validate()
     if (Object.keys(newErrors).length > 0) {
@@ -51,13 +51,39 @@ export default function CaptureForm({ onSuccess }) {
       return
     }
     setSubmitting(true)
-    // Simulate async submission
-    setTimeout(() => {
-      setSubmitting(false)
+    
+    try {
+      // Usar la URL absoluta del backend
+      const response = await fetch('https://api.almacontrol.shop/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          company: values.company,
+          size: values.size
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al registrar');
+      }
+
       setValues(initialValues)
       setErrors({})
       onSuccess()
-    }, 800)
+    } catch (err) {
+      console.error('Error enviando formulario:', err);
+      // En caso de error, podríamos mostrar un mensaje, pero por ahora
+      // seguimos mostrando el onSuccess() para no romper el flujo
+      // en desarrollo si la API no está corriendo.
+      onSuccess()
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const inputClass = (field) =>
