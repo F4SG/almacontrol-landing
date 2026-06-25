@@ -100,7 +100,7 @@ La contraseña por defecto para todos los usuarios es **`password`**.
 
 | Correo | Contraseña | Descripción |
 |--------|------------|-------------|
-| `admin@almacontrol.bo` | `admin123` | Acceso total. Aprueba Leads desde `/leads`. |
+| `admin@almacontrol.bo` | `password` | Acceso total. Aprueba Leads desde `/leads`. |
 
 ---
 
