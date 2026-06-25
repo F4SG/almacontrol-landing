@@ -29,7 +29,7 @@ almacontrol-landing/
 │   ├── routes/api.php          # Definición de todas las rutas de la API
 │   └── README.md               # Documentación detallada del backend
 ├── README.md                   # Este archivo (visión general del proyecto)
-└── almacontrol (1).sql         # Dump de la base de datos con datos de prueba
+└── almacontrol_completo.sql      # Dump completo de la BD (Estructura + Datos de 5 empresas SaaS)
 ```
 
 ---
