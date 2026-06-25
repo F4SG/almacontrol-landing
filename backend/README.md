@@ -137,7 +137,7 @@ Esto evita usuarios "huérfanos" sin empresa asignada.
 
 ---
 
-## Empresas y Usuarios de Prueba
+## Empresas y Usuarios Pre-creados (Entorno SaaS Multi-Tenant)
 
 ### 🏢 Empresa: AlmaControl Sistema (Super-Admin)
 > Empresa interna del sistema. El Super-Admin tiene acceso a gestionar Leads.
@@ -340,7 +340,8 @@ routes/
 | Laravel Sanctum | 4.x | Autenticación por API tokens |
 | PHP | 8.2 | Lenguaje del servidor |
 | Blade | — | Templates para correos electrónicos |
-| cPanel | — | Hosting en producción (server166.web-hosting.com) |
+| Dominio | — | GoDaddy (`almacontrol.shop`) |
+| cPanel / Hosting | — | Namecheap (Servidor Web de Producción) |
 
 ---
 

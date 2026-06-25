@@ -90,7 +90,7 @@ AlmaControl es una plataforma SaaS B2B Multi-Tenant que permite a distribuidoras
 
 ---
 
-## 🔐 Usuarios y Accesos Pre-creados (Multi-Tenant Demo)
+## 🔐 Usuarios y Accesos Pre-creados (Entorno SaaS Multi-Tenant)
 
 La contraseña por defecto para todos los usuarios es **`password`**.
 
@@ -207,8 +207,9 @@ php artisan serve
 | Frontend | React 18, Vite, Tailwind CSS, React Router |
 | Backend | Laravel 11, PHP 8.2, Laravel Sanctum |
 | Base de datos | MySQL 8.0 |
-| Hosting | cPanel (server166.web-hosting.com) |
-| Correos | SMTP (admin@almacontrol.shop) |
+| Dominio | GoDaddy (`almacontrol.shop`) |
+| Hosting y Despliegue | Namecheap (cPanel / Servidor Web) |
+| Correos | SMTP Namecheap (`admin@almacontrol.shop`) |
 
 ---
 
