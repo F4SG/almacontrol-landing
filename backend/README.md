@@ -139,51 +139,62 @@ Esto evita usuarios "huérfanos" sin empresa asignada.
 
 ## Empresas y Usuarios Pre-creados (Entorno SaaS Multi-Tenant)
 
-### 🏢 Empresa: AlmaControl Sistema (Super-Admin)
-> Empresa interna del sistema. El Super-Admin tiene acceso a gestionar Leads.
+### ⭐ Empresa 1 — AlmaControl (Super-Admin)
 
-| Campo | Valor |
-|-------|-------|
-| Correo | `admin@almacontrol.bo` |
-| Contraseña | `admin123` |
-| Rol | Administrador (Super-Admin) |
-| Empresa | AlmaControl Sistema |
-
----
-
-### 🏢 Empresa: Importadora Boliviana S.R.L. (id_empresa = 1)
-
-| Nombre | Correo | Contraseña | Rol |
-|--------|--------|------------|-----|
-| María García | `admin@importboliviana.com` | `password` | Administrador |
-| Carlos Mamani | `encargado@importboliviana.com` | `password` | Encargado |
-| Ana Quispe | `vendedor@importboliviana.com` | `password` | Vendedor |
+| Correo | Contraseña | Descripción |
+|--------|------------|-------------|
+| `admin@almacontrol.bo` | `admin123` | Acceso total. Aprueba Leads desde `/leads`. (Rol 1) |
+| `mateouni3@gmail.com` | `password` | Encargado (Rol 2) |
+| `franstorm352@gmail.com` | `password` | Administrador (Rol 1) |
+| `ale.quispe.coloso@gmail.com` | `password` | Vendedor (Rol 3) |
 
 ---
 
-### 🏢 Empresa: Distribuidora El Cóndor (id_empresa = 2)
+### 🏢 Empresa 2 — Ferretería Don Remigio
 
-| Nombre | Correo | Contraseña | Rol |
-|--------|--------|------------|-----|
-| Roberto Flores | `admin@elcondor.com` | `password` | Administrador |
-| Lucía Tarqui | `encargado@elcondor.com` | `password` | Encargado |
-
----
-
-### 🏢 Empresa: Farmacia San Lucas (id_empresa = 3)
-
-| Nombre | Correo | Contraseña | Rol |
-|--------|--------|------------|-----|
-| Patricia Chávez | `admin@sanlucas.com` | `password` | Administrador |
-| Diego Torrez | `vendedor@sanlucas.com` | `password` | Vendedor |
+| Rol | Correo | Contraseña |
+|-----|--------|------------|
+| Administrador | `remigio.soria@gmail.com` | `password` |
+| Encargado | `alberto.chura.ferr@gmail.com` | `password` |
+| Vendedor | `carmen.quispe.ferr@gmail.com` | `password` |
 
 ---
 
-### 🏢 Empresa: Wartaz (id_empresa creada por flujo de Leads)
+### 🏢 Empresa 3 — Farmacia San Lucas
 
-| Nombre | Correo | Contraseña | Rol |
-|--------|--------|------------|-----|
-| Franco Salas | `sgf6002402@est.univalle.edu` | `password` | Administrador |
+| Rol | Correo | Contraseña |
+|-----|--------|------------|
+| Administrador | `lucia.rojas.sanlucas@gmail.com` | `password` |
+| Encargado | `marco.pena.sanlucas@gmail.com` | `password` |
+| Vendedor | `sandra.vargas.slucas@gmail.com` | `password` |
+
+---
+
+### 🏢 Empresa 4 — Abarrotes Doña Paty
+
+| Rol | Correo | Contraseña |
+|-----|--------|------------|
+| Administrador | `paty.mamani.abarr@gmail.com` | `password` |
+| Encargado | `gonza.flores.paty@gmail.com` | `password` |
+| Vendedor | `rosa.condori.paty@gmail.com` | `password` |
+
+---
+
+### 🏢 Empresa 5 — Comercial Rumbo
+
+| Rol | Correo | Contraseña |
+|-----|--------|------------|
+| Administrador | `felix.condori.rumbo@gmail.com` | `password` |
+| Encargado | `naty.choque.rumbo@gmail.com` | `password` |
+| Vendedor | `wilmer.quispe.rumbo@gmail.com` | `password` |
+
+---
+
+### 🏢 Empresa 10 — Wartaz *(creada por flujo SaaS real)*
+
+| Rol | Correo | Contraseña |
+|-----|--------|------------|
+| Administrador | `sgf6002402@est.univalle.edu` | `password` |
 
 > ✅ Esta empresa fue creada a través del flujo completo SaaS: formulario en Landing → aprobación de Lead → correo automático con credenciales → primer login con cambio automático de contraseña.
 

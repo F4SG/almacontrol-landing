@@ -100,7 +100,7 @@ La contraseña por defecto para todos los usuarios es **`password`**.
 
 | Correo | Contraseña | Descripción |
 |--------|------------|-------------|
-| `admin@almacontrol.bo` | `password` | Acceso total. Aprueba Leads desde `/leads`. |
+| `admin@almacontrol.bo` | `admin123` | Acceso total. Aprueba Leads desde `/leads`. (Empresa 1) |
 
 ---
 
@@ -108,9 +108,9 @@ La contraseña por defecto para todos los usuarios es **`password`**.
 
 | Rol | Correo | Contraseña |
 |-----|--------|------------|
-| Administrador | `inventario@gmail.com` | `password` |
-| Encargado | `bodega@gmail.com` | `password` |
-| Vendedor | `distribuidora.coloso0@gmail.com` | `password` |
+| Administrador | `franstorm352@gmail.com` | `password` |
+| Encargado | `mateouni3@gmail.com` | `password` |
+| Vendedor | `ale.quispe.coloso@gmail.com` | `password` |
 
 ---
 
@@ -118,9 +118,9 @@ La contraseña por defecto para todos los usuarios es **`password`**.
 
 | Rol | Correo | Contraseña |
 |-----|--------|------------|
-| Administrador | `remigio@gmail.com` | `password` |
-| Encargado | `alberto.obrer.0@gmail.com` | `password` |
-| Vendedor | `lineker.campos.0@gmail.com` | `password` |
+| Administrador | `remigio.soria@gmail.com` | `password` |
+| Encargado | `alberto.chura.ferr@gmail.com` | `password` |
+| Vendedor | `carmen.quispe.ferr@gmail.com` | `password` |
 
 ---
 
@@ -128,21 +128,33 @@ La contraseña por defecto para todos los usuarios es **`password`**.
 
 | Rol | Correo | Contraseña |
 |-----|--------|------------|
-| Administrador | `farcia.sanlucas@gmail.com` | `password` |
-| Vendedor | `garcia.fharma.0@gmail.com` | `password` |
+| Administrador | `lucia.rojas.sanlucas@gmail.com` | `password` |
+| Encargado | `marco.pena.sanlucas@gmail.com` | `password` |
+| Vendedor | `sandra.vargas.slucas@gmail.com` | `password` |
 
 ---
 
-### 🏢 Empresa 4 — Almacenes La Señora Betty
+### 🏢 Empresa 4 — Abarrotes Doña Paty
 
 | Rol | Correo | Contraseña |
 |-----|--------|------------|
-| Administrador | `betty.almacenes@gmail.com` | `password` |
-| Encargado | `operaciones.betty.0@gmail.com` | `password` |
+| Administrador | `paty.mamani.abarr@gmail.com` | `password` |
+| Encargado | `gonza.flores.paty@gmail.com` | `password` |
+| Vendedor | `rosa.condori.paty@gmail.com` | `password` |
 
 ---
 
-### 🏢 Empresa 5 — Wartaz *(creada por flujo SaaS real)*
+### 🏢 Empresa 5 — Comercial Rumbo
+
+| Rol | Correo | Contraseña |
+|-----|--------|------------|
+| Administrador | `felix.condori.rumbo@gmail.com` | `password` |
+| Encargado | `naty.choque.rumbo@gmail.com` | `password` |
+| Vendedor | `wilmer.quispe.rumbo@gmail.com` | `password` |
+
+---
+
+### 🏢 Empresa 10 — Wartaz *(creada por flujo SaaS real)*
 
 | Rol | Correo | Contraseña |
 |-----|--------|------------|
